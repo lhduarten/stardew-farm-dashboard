@@ -1,0 +1,1298 @@
+{
+  "overview": {
+    "playerName": "Lucas",
+    "farmName": "Duarte",
+    "money": 152631,
+    "totalMoneyEarned": 548625,
+    "qiGems": 0,
+    "day": 15,
+    "season": "Outono",
+    "year": 2,
+    "houseUpgradeLevel": 1
+  },
+  "skills": {
+    "farming": 10,
+    "mining": 10,
+    "combat": 9,
+    "foraging": 9,
+    "fishing": 8,
+    "luck": 0
+  },
+  "stats": {
+    "stepsTaken": 198152,
+    "averageBedtime": 2296,
+    "daysPlayed": 183,
+    "rocksCrushed": 3400,
+    "stoneGathered": 3317,
+    "dirtHoed": 1448,
+    "seedsSown": 1849,
+    "itemsForaged": 576,
+    "itemsShipped": 1880,
+    "timesFished": 643,
+    "fishCaught": 362,
+    "PreciseFishCaught": 277,
+    "TreesChopped": 447,
+    "giftsGiven": 181,
+    "itemsCrafted": 1752,
+    "trashCansChecked": 24,
+    "cropsShipped": 350,
+    "FishingTreasures": 18,
+    "copperFound": 928,
+    "slimesKilled": 574,
+    "monstersKilled": 1797,
+    "BillboardQuestsDone": 25,
+    "questsCompleted": 31,
+    "geodesCracked": 137,
+    "PreservesMade": 158,
+    "mossHarvested": 146,
+    "ticketPrizesClaimed": 13,
+    "GoldenTagsTurnedIn": 7,
+    "Book_Void": 1,
+    "weedsEliminated": 89,
+    "ironFound": 1047,
+    "MysteryBoxesOpened": 34,
+    "diamondsFound": 19,
+    "BeveragesMade": 98,
+    "Book_Woodcutting": 1,
+    "wildtreesplanted": 2,
+    "goldFound": 560,
+    "iridiumFound": 6,
+    "goodFriends": 18,
+    "timesUnconscious": 6,
+    "Book_Friendship": 1,
+    "ArtifactSpotsDug": 2,
+    "stumpsChopped": 62,
+    "ChickenEggsLayed": 32
+  },
+  "monstersKilled": {
+    "Green Slime": 259,
+    "Dust Spirit": 240,
+    "Frost Bat": 226,
+    "Frost Jelly": 179,
+    "Skeleton": 123,
+    "Sludge": 122,
+    "Lava Bat": 119,
+    "Fly": 117,
+    "Bug": 102,
+    "Shadow Brute": 52,
+    "Grub": 38,
+    "Bat": 34,
+    "Metal Head": 31,
+    "Rock Crab": 29,
+    "Shadow Shaman": 28,
+    "Ghost": 20,
+    "Stone Golem": 15,
+    "Lava Crab": 15,
+    "Duggy": 12,
+    "Serpent": 12,
+    "Big Slime": 11,
+    "Squid Kid": 8,
+    "Carbon Ghost": 2
+  },
+  "achievements": [
+    0,
+    1,
+    2,
+    6,
+    7,
+    11,
+    12,
+    13,
+    18,
+    20,
+    21,
+    24,
+    25,
+    27,
+    28,
+    29,
+    37,
+    38
+  ],
+  "friendships": [
+    {
+      "name": "Lewis",
+      "points": 2749,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Primavera 7, Ano 2"
+    },
+    {
+      "name": "Leah",
+      "points": 2749,
+      "hearts": 10,
+      "status": "Dating",
+      "lastGift": "Outono 12, Ano 2"
+    },
+    {
+      "name": "Pam",
+      "points": 2749,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Verão 6, Ano 2"
+    },
+    {
+      "name": "Clint",
+      "points": 2732,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Inverno 26, Ano 1"
+    },
+    {
+      "name": "Gus",
+      "points": 2634,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Verão 8, Ano 2"
+    },
+    {
+      "name": "Linus",
+      "points": 2618,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Verão 17, Ano 2"
+    },
+    {
+      "name": "Robin",
+      "points": 2378,
+      "hearts": 9,
+      "status": "Friendly",
+      "lastGift": "Primavera 28, Ano 2"
+    },
+    {
+      "name": "Harvey",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Inverno 28, Ano 1"
+    },
+    {
+      "name": "Emily",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Primavera 27, Ano 2"
+    },
+    {
+      "name": "Sam",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 17, Ano 2"
+    },
+    {
+      "name": "Shane",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Outono 10, Ano 2"
+    },
+    {
+      "name": "Willy",
+      "points": 2122,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 24, Ano 2"
+    },
+    {
+      "name": "Marnie",
+      "points": 2073,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Outono 13, Ano 2"
+    },
+    {
+      "name": "Penny",
+      "points": 2067,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Outono 2, Ano 2"
+    },
+    {
+      "name": "Evelyn",
+      "points": 2061,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 24, Ano 2"
+    },
+    {
+      "name": "Alex",
+      "points": 2050,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 13, Ano 2"
+    },
+    {
+      "name": "Caroline",
+      "points": 2036,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 24, Ano 2"
+    },
+    {
+      "name": "Demetrius",
+      "points": 2000,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 19, Ano 2"
+    },
+    {
+      "name": "Pierre",
+      "points": 1860,
+      "hearts": 7,
+      "status": "Friendly",
+      "lastGift": "Primavera 26, Ano 2"
+    },
+    {
+      "name": "Sebastian",
+      "points": 1835,
+      "hearts": 7,
+      "status": "Friendly",
+      "lastGift": "Inverno 10, Ano 1"
+    },
+    {
+      "name": "Vincent",
+      "points": 1692,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Primavera 10, Ano 2"
+    },
+    {
+      "name": "Maru",
+      "points": 1640,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Verão 17, Ano 2"
+    },
+    {
+      "name": "Jodi",
+      "points": 1559,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Outono 28, Ano 1"
+    },
+    {
+      "name": "Abigail",
+      "points": 1542,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Inverno 6, Ano 1"
+    },
+    {
+      "name": "George",
+      "points": 1347,
+      "hearts": 5,
+      "status": "Friendly",
+      "lastGift": "Primavera 10, Ano 2"
+    },
+    {
+      "name": "Haley",
+      "points": 1298,
+      "hearts": 5,
+      "status": "Friendly",
+      "lastGift": "Primavera 14, Ano 2"
+    },
+    {
+      "name": "Kent",
+      "points": 1275,
+      "hearts": 5,
+      "status": "Friendly",
+      "lastGift": "Outono 13, Ano 2"
+    },
+    {
+      "name": "Elliott",
+      "points": 1219,
+      "hearts": 4,
+      "status": "Friendly",
+      "lastGift": "Outono 5, Ano 2"
+    },
+    {
+      "name": "Jas",
+      "points": 1071,
+      "hearts": 4,
+      "status": "Friendly",
+      "lastGift": "Outono 2, Ano 2"
+    },
+    {
+      "name": "Wizard",
+      "points": 907,
+      "hearts": 3,
+      "status": "Friendly",
+      "lastGift": "Inverno 17, Ano 1"
+    },
+    {
+      "name": "Dwarf",
+      "points": 686,
+      "hearts": 2,
+      "status": "Friendly",
+      "lastGift": "Verão 22, Ano 2"
+    },
+    {
+      "name": "Sandy",
+      "points": 153,
+      "hearts": 0,
+      "status": "Friendly",
+      "lastGift": null
+    }
+  ],
+  "shipped": [
+    {
+      "id": "342",
+      "name": "Conserva (vegetal variado)",
+      "qty": 394,
+      "isGenericId": true
+    },
+    {
+      "id": "344",
+      "name": "Geleia (fruta variada)",
+      "qty": 349,
+      "isGenericId": true
+    },
+    {
+      "id": "303",
+      "name": "Pale Ale",
+      "qty": 236,
+      "isGenericId": false
+    },
+    {
+      "id": "348",
+      "name": "Vinho (fruta variada)",
+      "qty": 181,
+      "isGenericId": true
+    },
+    {
+      "id": "192",
+      "name": "Potato",
+      "qty": 94,
+      "isGenericId": false
+    },
+    {
+      "id": "771",
+      "name": "Fiber",
+      "qty": 70,
+      "isGenericId": false
+    },
+    {
+      "id": "24",
+      "name": "Parsnip",
+      "qty": 54,
+      "isGenericId": false
+    },
+    {
+      "id": "260",
+      "name": "Hot Pepper",
+      "qty": 52,
+      "isGenericId": false
+    },
+    {
+      "id": "DriedFruit",
+      "name": "Dried Cranberries",
+      "qty": 46,
+      "isGenericId": false
+    },
+    {
+      "id": "188",
+      "name": "Green Bean",
+      "qty": 45,
+      "isGenericId": false
+    },
+    {
+      "id": "400",
+      "name": "Strawberry",
+      "qty": 36,
+      "isGenericId": false
+    },
+    {
+      "id": "92",
+      "name": "Sap",
+      "qty": 35,
+      "isGenericId": false
+    },
+    {
+      "id": "702",
+      "name": "Chub",
+      "qty": 32,
+      "isGenericId": false
+    },
+    {
+      "id": "256",
+      "name": "Tomato",
+      "qty": 32,
+      "isGenericId": false
+    },
+    {
+      "id": "258",
+      "name": "Blueberry",
+      "qty": 22,
+      "isGenericId": false
+    },
+    {
+      "id": "137",
+      "name": "Rarecrow",
+      "qty": 16,
+      "isGenericId": false
+    },
+    {
+      "id": "SummerSquash",
+      "name": "Summer Squash",
+      "qty": 14,
+      "isGenericId": false
+    },
+    {
+      "id": "350",
+      "name": "Suco (vegetal variado)",
+      "qty": 12,
+      "isGenericId": true
+    },
+    {
+      "id": "145",
+      "name": "Sunfish",
+      "qty": 10,
+      "isGenericId": false
+    },
+    {
+      "id": "142",
+      "name": "Carp",
+      "qty": 10,
+      "isGenericId": false
+    },
+    {
+      "id": "330",
+      "name": "Clay",
+      "qty": 6,
+      "isGenericId": false
+    },
+    {
+      "id": "18",
+      "name": "Daffodil",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "138",
+      "name": "Rainbow Trout",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "144",
+      "name": "Pike",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "306",
+      "name": "Mayonnaise",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "156",
+      "name": "Ghostfish",
+      "qty": 4,
+      "isGenericId": false
+    },
+    {
+      "id": "SmokedFish",
+      "name": "Item #SmokedFish",
+      "qty": 4,
+      "isGenericId": false
+    },
+    {
+      "id": "372",
+      "name": "Clam",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "131",
+      "name": "Sardine",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "136",
+      "name": "Largemouth Bass",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "140",
+      "name": "Rarecrow",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "700",
+      "name": "Bullhead",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "141",
+      "name": "Item #141",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "146",
+      "name": "Campfire",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "132",
+      "name": "Bream",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "706",
+      "name": "Item #706",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "705",
+      "name": "Item #705",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "708",
+      "name": "Item #708",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "22",
+      "name": "Dandelion",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "20",
+      "name": "Leek",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "382",
+      "name": "Coal",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "190",
+      "name": "Cauliflower",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "717",
+      "name": "Crab",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "723",
+      "name": "Oyster",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "734",
+      "name": "Item #734",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "130",
+      "name": "Chest",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "698",
+      "name": "Item #698",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "701",
+      "name": "Item #701",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "147",
+      "name": "Herring",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "335",
+      "name": "Iron Bar",
+      "qty": 1,
+      "isGenericId": false
+    }
+  ],
+  "crops": {
+    "byType": [
+      {
+        "name": "Pumpkin",
+        "count": 108,
+        "fullyGrown": 4,
+        "dead": 0
+      },
+      {
+        "name": "Cranberries",
+        "count": 103,
+        "fullyGrown": 103,
+        "dead": 0
+      },
+      {
+        "name": "Hot Pepper",
+        "count": 18,
+        "fullyGrown": 0,
+        "dead": 18
+      },
+      {
+        "name": "Sunflower",
+        "count": 13,
+        "fullyGrown": 12,
+        "dead": 0
+      },
+      {
+        "name": "Corn",
+        "count": 9,
+        "fullyGrown": 9,
+        "dead": 0
+      },
+      {
+        "name": "Ancient Fruit",
+        "count": 3,
+        "fullyGrown": 3,
+        "dead": 0
+      },
+      {
+        "name": "Broccoli",
+        "count": 3,
+        "fullyGrown": 3,
+        "dead": 0
+      },
+      {
+        "name": "Tomato",
+        "count": 2,
+        "fullyGrown": 0,
+        "dead": 2
+      },
+      {
+        "name": "Fairy Rose",
+        "count": 2,
+        "fullyGrown": 2,
+        "dead": 0
+      },
+      {
+        "name": "Artichoke",
+        "count": 1,
+        "fullyGrown": 1,
+        "dead": 0
+      }
+    ],
+    "totalTiles": 262,
+    "fullyGrown": 137,
+    "dead": 20,
+    "growing": 105,
+    "daysLeftInSeason": 13,
+    "seasonEndRisk": {
+      "tilesAtRisk": 0,
+      "valueAtRisk": 0,
+      "byType": []
+    },
+    "roiPerTile": [
+      {
+        "name": "Pumpkin",
+        "daysToHarvest": 9,
+        "price": 320,
+        "roiPerDay": 35.6,
+        "tiles": 108
+      },
+      {
+        "name": "Fairy Rose",
+        "daysToHarvest": 9,
+        "price": 290,
+        "roiPerDay": 32.2,
+        "tiles": 2
+      },
+      {
+        "name": "Artichoke",
+        "daysToHarvest": 6,
+        "price": 160,
+        "roiPerDay": 26.7,
+        "tiles": 1
+      },
+      {
+        "name": "Ancient Fruit",
+        "daysToHarvest": 28,
+        "price": 550,
+        "roiPerDay": 19.6,
+        "tiles": 3
+      },
+      {
+        "name": "Cranberries",
+        "daysToHarvest": 5,
+        "price": 75,
+        "roiPerDay": 15.0,
+        "tiles": 103
+      },
+      {
+        "name": "Sunflower",
+        "daysToHarvest": 6,
+        "price": 80,
+        "roiPerDay": 13.3,
+        "tiles": 13
+      },
+      {
+        "name": "Broccoli",
+        "daysToHarvest": 8,
+        "price": 70,
+        "roiPerDay": 8.8,
+        "tiles": 3
+      },
+      {
+        "name": "Hot Pepper",
+        "daysToHarvest": 5,
+        "price": 40,
+        "roiPerDay": 8.0,
+        "tiles": 18
+      },
+      {
+        "name": "Tomato",
+        "daysToHarvest": 11,
+        "price": 60,
+        "roiPerDay": 5.5,
+        "tiles": 2
+      },
+      {
+        "name": "Corn",
+        "daysToHarvest": 14,
+        "price": 50,
+        "roiPerDay": 3.6,
+        "tiles": 9
+      }
+    ]
+  },
+  "sprinklers": {
+    "counts": {
+      "Sprinkler": 1,
+      "Quality Sprinkler": 39,
+      "Iridium Sprinkler": 1
+    },
+    "coverageCapacity": 340
+  },
+  "animals": [
+    {
+      "name": "Pipoca",
+      "type": "Brown Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Pintadinha",
+      "type": "Brown Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Grisbela",
+      "type": "Brown Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Carijó",
+      "type": "White Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Bonita",
+      "type": "White Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Estrela",
+      "type": "Brown Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Branca",
+      "type": "White Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Mimosa",
+      "type": "White Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    }
+  ],
+  "buildings": {
+    "Farmhouse": 1,
+    "Greenhouse": 1,
+    "Shipping Bin": 1,
+    "Pet Bowl": 1,
+    "Coop": 1,
+    "Barn": 1
+  },
+  "exploration": {
+    "totalExisting": 79,
+    "totalVisited": 46,
+    "notVisited": [
+      {
+        "name": "BoatTunnel",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "BugLand",
+        "locked": true,
+        "reason": "Requer a Chave Enferrujada"
+      },
+      {
+        "name": "Caldera",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "CaptainRoom",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "Club",
+        "locked": true,
+        "reason": "Requer o Cartão do Clube"
+      },
+      {
+        "name": "Greenhouse",
+        "locked": true,
+        "reason": "Estufa ainda não desbloqueada"
+      },
+      {
+        "name": "IslandEast",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandFarmCave",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandFarmHouse",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandFieldOffice",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandHut",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandNorth",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandNorthCave1",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandShrine",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandSouth",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandSouthEast",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandSouthEastCave",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandWest",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandWestCave1",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "LeoTreeHouse",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "MasteryCave",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "QiNutRoom",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "Sewer",
+        "locked": true,
+        "reason": "Requer a Chave Enferrujada"
+      },
+      {
+        "name": "WitchHut",
+        "locked": true,
+        "reason": "Requer o Talismã Sombrio"
+      },
+      {
+        "name": "WitchSwamp",
+        "locked": true,
+        "reason": "Requer o Talismã Sombrio"
+      },
+      {
+        "name": "WitchWarpCave",
+        "locked": true,
+        "reason": "Requer o Talismã Sombrio"
+      },
+      {
+        "name": "WizardHouseBasement",
+        "locked": true,
+        "reason": "Requer a Tinta Mágica"
+      },
+      {
+        "name": "AbandonedJojaMart",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "BathHouse_WomensLocker",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "LewisBasement",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "MovieTheater",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "Summit",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "Trailer_Big",
+        "locked": false,
+        "reason": null
+      }
+    ]
+  },
+  "machines": {
+    "counts": {
+      "Keg": 62,
+      "Preserves Jar": 18,
+      "Crab Pot": 3,
+      "Tapper": 13,
+      "Furnace": 6,
+      "Bee House": 1,
+      "Crystalarium": 1,
+      "Seed Maker": 1,
+      "Charcoal Kiln": 9,
+      "Mayonnaise Machine": 1,
+      "Cheese Press": 1,
+      "Oil Maker": 1
+    },
+    "active": {
+      "Keg": 59,
+      "Preserves Jar": 18,
+      "Tapper": 13,
+      "Bee House": 1,
+      "Crystalarium": 1
+    }
+  },
+  "finance": {
+    "rawValue": 340112.0,
+    "rawPotentialValue": 1031655.0,
+    "artisanStockValue": 19100.0,
+    "readyValue": 100.0,
+    "brewingValue": 107190.0,
+    "machinesReady": 1,
+    "machinesBrewing": 91,
+    "topRawItems": [
+      {
+        "name": "Starfruit",
+        "stack": 116,
+        "value": 116250.0,
+        "potential": 348750.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Strawberry",
+        "stack": 334,
+        "value": 54030.0,
+        "potential": 162090.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Cranberries",
+        "stack": 459,
+        "value": 39319.0,
+        "potential": 117956.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Hops",
+        "stack": 1253,
+        "value": 39306.0,
+        "potential": 141262.0,
+        "method": "Jar -> Conserva"
+      },
+      {
+        "name": "Melon",
+        "stack": 67,
+        "value": 25125.0,
+        "potential": 75375.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Ancient Fruit",
+        "stack": 20,
+        "value": 14575.0,
+        "potential": 43725.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Hot Pepper",
+        "stack": 129,
+        "value": 6810.0,
+        "potential": 20600.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Corn",
+        "stack": 102,
+        "value": 6325.0,
+        "potential": 17750.0,
+        "method": "Jar -> Conserva"
+      },
+      {
+        "name": "Pumpkin",
+        "stack": 12,
+        "value": 5680.0,
+        "potential": 12780.0,
+        "method": "Keg -> Suco"
+      },
+      {
+        "name": "Tomato",
+        "stack": 56,
+        "value": 4755.0,
+        "potential": 12310.0,
+        "method": "Jar -> Conserva"
+      }
+    ],
+    "topArtisanItems": [
+      {
+        "name": "Maple Syrup",
+        "value": 7200.0
+      },
+      {
+        "name": "Pine Tar",
+        "value": 4600.0
+      },
+      {
+        "name": "Wild Honey",
+        "value": 1100.0
+      },
+      {
+        "name": "Melon Wine",
+        "value": 750.0
+      },
+      {
+        "name": "Pumpkin Juice",
+        "value": 720.0
+      },
+      {
+        "name": "Pickled Pumpkin",
+        "value": 690.0
+      },
+      {
+        "name": "Pale Ale",
+        "value": 600.0
+      },
+      {
+        "name": "Melon Jelly",
+        "value": 550.0
+      },
+      {
+        "name": "Blueberry Jelly",
+        "value": 450.0
+      },
+      {
+        "name": "Pickled Yam",
+        "value": 370.0
+      }
+    ],
+    "rawUnitsTotal": 2935
+  },
+  "kpis": {
+    "money": {
+      "label": "Dinheiro em caixa",
+      "target": 250000,
+      "actual": 152631,
+      "unit": "g"
+    },
+    "totalEarned": {
+      "label": "Total ganho (histórico)",
+      "target": 1000000,
+      "actual": 548625,
+      "unit": "g"
+    },
+    "skillAvg": {
+      "label": "Média das habilidades",
+      "target": 10,
+      "actual": 7.7,
+      "unit": "",
+      "worst": "luck"
+    },
+    "machineUptime": {
+      "label": "Máquinas em produção",
+      "target": 100,
+      "actual": 78.6,
+      "unit": "%"
+    },
+    "cropMaturity": {
+      "label": "Plantações maduras",
+      "target": 100,
+      "actual": 52.3,
+      "unit": "%"
+    },
+    "cropLoss": {
+      "label": "Plantações mortas",
+      "target": 0,
+      "actual": 7.6,
+      "unit": "%",
+      "inverse": true
+    },
+    "irrigation": {
+      "label": "Cobertura de irrigação (teto)",
+      "target": 100,
+      "actual": 100,
+      "unit": "%"
+    },
+    "seasonRisk": {
+      "label": "Tiles em risco na virada da estação",
+      "target": 0,
+      "actual": 0.0,
+      "unit": "%",
+      "inverse": true
+    },
+    "friendshipAvg": {
+      "label": "Média de corações (NPCs)",
+      "target": 10,
+      "actual": 7.0,
+      "unit": "♥"
+    },
+    "npcsMaxed": {
+      "label": "NPCs com 10♥+",
+      "target": 32,
+      "actual": 6,
+      "unit": ""
+    },
+    "dailyRunRate": {
+      "label": "Receita média/dia (histórico)",
+      "target": null,
+      "actual": 2998.0,
+      "unit": "g/dia"
+    }
+  },
+  "projection": {
+    "dailyRunRate": 2998.0,
+    "machines": {
+      "keg": {
+        "total": 62,
+        "active": 59,
+        "idle": 3
+      },
+      "jar": {
+        "total": 18,
+        "active": 18,
+        "idle": 0
+      },
+      "cask": {
+        "total": 0,
+        "active": 0,
+        "idle": 0
+      },
+      "tapper": {
+        "total": 13,
+        "active": 13,
+        "idle": 0
+      }
+    },
+    "rawUnitsTotal": 2935,
+    "scenarioSellRawNow": 359312.0,
+    "scenarioProcessFirst": 1158045.0,
+    "processingGain": 798733.0,
+    "processingGainPct": 222.3,
+    "brewingValue": 107190.0,
+    "moneyIfSellRawNow": 511943.0,
+    "moneyIfProcessFirst": 1310676.0
+  }
+}

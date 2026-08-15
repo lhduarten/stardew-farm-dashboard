@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Operacional | Fazenda Duarte</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#B9800A',
+                primaryDark: '#8F6308',
+                primaryLight: '#E7A72C',
+                primaryLighter: '#FDF1D6',
+                nfbBg: '#FBF9F4'
+            },
+            fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                display: ['Outfit', 'sans-serif']
+            }
+        }
+    }
+}
+</script>
+
+<style type="text/tailwindcss">
+    @layer base {
+        body { @apply bg-nfbBg text-slate-700 antialiased; font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { @apply font-display text-slate-800; }
+    }
+    @layer components {
+        .sidebar { @apply bg-white border-r-4 border-primary fixed h-screen w-64 z-50 flex flex-col overflow-y-auto shadow-xl; }
+        .main-content { @apply ml-64 p-10; }
+        .nav-label { @apply text-[9px] font-black text-slate-300 uppercase tracking-widest mt-6 mb-2 ml-6 block; }
+        .nav-link { @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-500 transition-all mx-3 my-0.5 cursor-pointer; }
+        .nav-link:hover { @apply bg-slate-50 text-primary; }
+        .nav-link.active { @apply bg-primaryLighter text-primary shadow-sm border border-primary/10; }
+        .card-nfb { @apply bg-white border border-slate-200 rounded-[20px] p-6 shadow-sm transition-all hover:shadow-md; }
+        .kpi-card { @apply bg-gradient-to-br from-white to-slate-50 border border-slate-100; }
+        .status-badge { @apply px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider; }
+        .badge-green { @apply bg-green-100 text-green-700; }
+        .badge-red { @apply bg-red-100 text-red-700; }
+        .badge-orange { @apply bg-orange-100 text-orange-700; }
+        .badge-gray { @apply bg-slate-100 text-slate-500; }
+        .view-hidden { display: none !important; }
+        .tbl-th { @apply text-left py-3 px-4 text-xs font-black text-slate-400 uppercase tracking-widest; }
+        .tbl-td { @apply py-3 px-4 text-sm text-slate-700; }
+        .tbl-row { @apply hover:bg-slate-50 transition-all border-b border-slate-100 last:border-0; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { @apply bg-primary/30 rounded-full; }
+    }
+</style>
+</head>
+<body class="bg-nfbBg">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+    <div class="p-6 flex-1">
+        <div class="mb-8">
+            <img src="data:image/png;base64,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" alt="Stardew Valley" class="h-11 w-auto object-contain mb-4">
+            <div class="flex items-center gap-2 mb-1">
+                <p class="font-display font-extrabold text-slate-800 leading-none" id="sidebar-farm-name">Fazenda</p>
+            </div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Painel Operacional</p>
+            <div class="h-px bg-slate-100 w-full mb-3"></div>
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest" id="sidebar-date">—</span>
+            </div>
+        </div>
+
+        <nav>
+            <span class="nav-label">Visão</span>
+            <a href="#" onclick="switchView('overview')" id="nav-overview" class="nav-link active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                Visão Geral
+            </a>
+            <a href="#" onclick="switchView('metas')" id="nav-metas" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                Meta × Realizado
+            </a>
+
+            <span class="nav-label">Controladoria</span>
+            <a href="#" onclick="switchView('finance')" id="nav-finance" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Financeiro
+            </a>
+
+            <span class="nav-label">Fazenda</span>
+            <a href="#" onclick="switchView('crops')" id="nav-crops" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9Z"/><path d="M12 22C7.03 22 3 17.97 3 13c4.97 0 9 4.03 9 9Z"/><path d="M12 13c0-4.97 4.03-9 9-9 0 4.97-4.03 9-9 9Z"/><path d="M12 13C12 8.03 7.97 4 3 4c0 4.97 4.03 9 9 9Z"/></svg>
+                Plantações
+            </a>
+            <a href="#" onclick="switchView('animals')" id="nav-animals" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4v7"/><path d="m9 17 6-12"/><circle cx="18" cy="18" r="3"/><circle cx="6" cy="18" r="3"/></svg>
+                Animais & Relações
+            </a>
+
+            <span class="nav-label">Produção</span>
+            <a href="#" onclick="switchView('production')" id="nav-production" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                Máquinas & Envios
+            </a>
+            <a href="#" onclick="switchView('achv')" id="nav-achv" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                Conquistas
+            </a>
+            <a href="#" onclick="switchView('exploration')" id="nav-exploration" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                Exploração
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-5 border-t border-slate-100">
+        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-black text-sm flex-shrink-0" id="sidebar-avatar">?</div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-sm font-bold text-slate-800" id="sidebar-player-name">—</span>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Dados 100% locais</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main-content min-h-screen">
+    <header class="flex justify-between items-start mb-6 gap-6">
+        <div>
+            <h1 class="text-3xl font-black tracking-tight text-slate-900" id="view-title">Visão Geral</h1>
+            <p class="text-slate-400 font-medium mt-1 text-sm" id="view-subtitle">Carregando...</p>
+        </div>
+    </header>
+
+    <!-- ========== VIEW: OVERVIEW ========== -->
+    <div id="view-overview">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6" id="kpi-overview-row"></div>
+
+        <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Resumo por aba</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8" id="section-summary-grid"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="card-nfb">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-black text-slate-800">Habilidades</h3>
+                    <span class="status-badge badge-green">nível 0–10</span>
+                </div>
+                <div class="h-[260px]"><canvas id="chart-skills"></canvas></div>
+            </div>
+            <div class="card-nfb">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-black text-slate-800">Plantações — top 10</h3>
+                    <span class="status-badge badge-gray">madura / crescendo / morta</span>
+                </div>
+                <div class="h-[260px]"><canvas id="chart-crops"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: METAS ========== -->
+    <div id="view-metas" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="kpi-metas-grid"></div>
+    </div>
+
+    <!-- ========== VIEW: FINANCE ========== -->
+    <div id="view-finance" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            <div class="card-nfb kpi-card">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Cenário A · vender matéria-prima crua</p>
+                <div class="flex items-baseline gap-1 mb-1">
+                    <span class="text-xs font-black text-slate-400">g</span>
+                    <span class="text-3xl font-black text-slate-900 tracking-tight" id="fin-scenario-a">0</span>
+                </div>
+                <p class="text-xs text-slate-400 font-medium" id="fin-scenario-a-sub">—</p>
+            </div>
+            <div class="card-nfb kpi-card border-primary/30" style="background:linear-gradient(135deg,#fff,#FDF1D6)">
+                <p class="text-xs font-black text-primary uppercase tracking-widest mb-3">Cenário B · processar em Keg/Jar antes</p>
+                <div class="flex items-baseline gap-1 mb-1">
+                    <span class="text-xs font-black text-primary">g</span>
+                    <span class="text-3xl font-black text-primary tracking-tight" id="fin-scenario-b">0</span>
+                </div>
+                <p class="text-xs text-slate-500 font-medium" id="fin-scenario-b-sub">—</p>
+            </div>
+        </div>
+
+        <div class="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center justify-between mb-6">
+            <span class="text-xs font-black text-green-700 uppercase tracking-wide">Ganho de processar vs. vender crua</span>
+            <span class="text-lg font-black text-green-700" id="fin-gain">—</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6" id="fin-capacity-grid"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Matéria-prima em estoque (top 10)</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr>
+                            <th class="tbl-th">Item</th><th class="tbl-th">Qtd</th><th class="tbl-th">Valor crua</th><th class="tbl-th">Se processado</th>
+                        </tr></thead>
+                        <tbody id="raw-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">ROI por plantação (g de venda ÷ dias até 1ª colheita)</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr>
+                            <th class="tbl-th">Plantação</th><th class="tbl-th">Tiles</th><th class="tbl-th">Dias</th><th class="tbl-th">g/dia/tile</th>
+                        </tr></thead>
+                        <tbody id="roi-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: CROPS ========== -->
+    <div id="view-crops" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6" id="kpi-crops-row"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="card-nfb">
+                <h3 class="text-base font-black text-slate-800 mb-4">Irrigação — sprinklers</h3>
+                <div class="grid grid-cols-2 gap-3" id="sprinkler-grid"></div>
+                <p class="text-xs text-slate-400 font-medium mt-4">Capacidade teórica, sem contar sobreposição.</p>
+            </div>
+            <div class="card-nfb">
+                <h3 class="text-base font-black text-slate-800 mb-2">Risco de virada de estação</h3>
+                <p class="text-xs text-slate-400 font-medium mb-4"><span id="days-left-season">—</span> dias restantes na estação</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr><th class="tbl-th">Plantação</th><th class="tbl-th">Tiles em risco</th><th class="tbl-th">Valor em risco</th></tr></thead>
+                        <tbody id="risk-table-body"></tbody>
+                    </table>
+                </div>
+                <p class="text-sm text-slate-500 font-medium mt-3" id="risk-empty-msg" style="display:none">Nenhuma em risco.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: ANIMALS & SOCIAL ========== -->
+    <div id="view-animals" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Animais</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr><th class="tbl-th">Nome</th><th class="tbl-th">Tipo</th><th class="tbl-th">Local</th><th class="tbl-th">Amizade</th><th class="tbl-th">Felicidade</th></tr></thead>
+                        <tbody id="animals-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Relacionamentos (top 10)</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr><th class="tbl-th">NPC</th><th class="tbl-th">♥</th><th class="tbl-th">Status</th><th class="tbl-th">Último presente</th></tr></thead>
+                        <tbody id="friends-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: PRODUCTION ========== -->
+    <div id="view-production" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Itens mais enviados</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Item</th><th class="tbl-th">Qtd</th></tr></thead><tbody id="shipped-table-body"></tbody></table>
+                </div>
+                <p class="text-[11px] text-slate-400 font-medium px-6 pb-4">* soma de todas as variantes</p>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Monstros derrotados</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Monstro</th><th class="tbl-th">Qtd</th></tr></thead><tbody id="monsters-table-body"></tbody></table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Máquinas artesanais</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Máquina</th><th class="tbl-th">Instaladas</th><th class="tbl-th">Em uso</th></tr></thead><tbody id="machines-table-body"></tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: ACHIEVEMENTS ========== -->
+    <div id="view-achv" class="view-hidden">
+        <div class="card-nfb">
+            <h3 class="text-base font-black text-slate-800 mb-1">Conquistas desbloqueadas</h3>
+            <p class="text-xs text-slate-400 font-medium mb-5">Só ids — sem nomes inventados.</p>
+            <div class="flex flex-wrap gap-2" id="achv-grid"></div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: EXPLORATION ========== -->
+    <div id="view-exploration" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6" id="kpi-exploration-row"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-2">
+                    <h3 class="text-base font-black text-slate-800">Livres pra visitar</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Local</th></tr></thead><tbody id="exploration-free-body"></tbody></table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-2">
+                    <h3 class="text-base font-black text-slate-800">Trancados</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Local</th><th class="tbl-th">Motivo</th></tr></thead><tbody id="exploration-locked-body"></tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-slate-400 font-medium mt-10 pt-6 border-t border-slate-200">
+        Save: <code id="save-note">Duarte_443237868</code> · processado localmente, nada enviado à internet.
+    </footer>
+</main>
+
+<script>
+const VIEWS = ['overview','metas','finance','crops','animals','production','achv','exploration'];
+const VIEW_TITLES = {
+    overview: 'Visão Geral', metas: 'Meta × Realizado', finance: 'Financeiro',
+    crops: 'Plantações', animals: 'Animais & Relações', production: 'Máquinas & Envios', achv: 'Conquistas',
+    exploration: 'Exploração',
+};
+const VIEW_SUBTITLES = {
+    overview: '', metas: '',
+    finance: 'Matéria-prima vs. processada',
+    crops: '',
+    animals: '',
+    production: '',
+    achv: '',
+    exploration: '',
+};
+
+function switchView(viewId) {
+    VIEWS.forEach(id => document.getElementById('view-' + id)?.classList.add('view-hidden'));
+    document.getElementById('view-' + viewId)?.classList.remove('view-hidden');
+    VIEWS.forEach(id => document.getElementById('nav-' + id)?.classList.remove('active'));
+    document.getElementById('nav-' + viewId)?.classList.add('active');
+    document.getElementById('view-title').innerText = VIEW_TITLES[viewId] || viewId;
+    document.getElementById('view-subtitle').innerText = VIEW_SUBTITLES[viewId] || '';
+}
+
+function el(tag, attrs={}, children=[]) {
+    const e = document.createElement(tag);
+    for (const [k,v] of Object.entries(attrs)) {
+        if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v; else e.setAttribute(k, v);
+    }
+    for (const c of [].concat(children)) e.appendChild(c);
+    return e;
+}
+const fmt = (n) => Number(n||0).toLocaleString('pt-BR', {maximumFractionDigits:1});
+const fmtG = (n) => `${fmt(n)}g`;
+
+const CHART_COLORS = { good:'#0ca30c', warn:'#eda100', crit:'#d03b3b', s1:'#2a78d6', primary:'#B9800A' };
+
+const EMBEDDED_DATA = {
+  "overview": {
+    "playerName": "Lucas",
+    "farmName": "Duarte",
+    "money": 152631,
+    "totalMoneyEarned": 548625,
+    "qiGems": 0,
+    "day": 15,
+    "season": "Outono",
+    "year": 2,
+    "houseUpgradeLevel": 1
+  },
+  "skills": {
+    "farming": 10,
+    "mining": 10,
+    "combat": 9,
+    "foraging": 9,
+    "fishing": 8,
+    "luck": 0
+  },
+  "stats": {
+    "stepsTaken": 198152,
+    "averageBedtime": 2296,
+    "daysPlayed": 183,
+    "rocksCrushed": 3400,
+    "stoneGathered": 3317,
+    "dirtHoed": 1448,
+    "seedsSown": 1849,
+    "itemsForaged": 576,
+    "itemsShipped": 1880,
+    "timesFished": 643,
+    "fishCaught": 362,
+    "PreciseFishCaught": 277,
+    "TreesChopped": 447,
+    "giftsGiven": 181,
+    "itemsCrafted": 1752,
+    "trashCansChecked": 24,
+    "cropsShipped": 350,
+    "FishingTreasures": 18,
+    "copperFound": 928,
+    "slimesKilled": 574,
+    "monstersKilled": 1797,
+    "BillboardQuestsDone": 25,
+    "questsCompleted": 31,
+    "geodesCracked": 137,
+    "PreservesMade": 158,
+    "mossHarvested": 146,
+    "ticketPrizesClaimed": 13,
+    "GoldenTagsTurnedIn": 7,
+    "Book_Void": 1,
+    "weedsEliminated": 89,
+    "ironFound": 1047,
+    "MysteryBoxesOpened": 34,
+    "diamondsFound": 19,
+    "BeveragesMade": 98,
+    "Book_Woodcutting": 1,
+    "wildtreesplanted": 2,
+    "goldFound": 560,
+    "iridiumFound": 6,
+    "goodFriends": 18,
+    "timesUnconscious": 6,
+    "Book_Friendship": 1,
+    "ArtifactSpotsDug": 2,
+    "stumpsChopped": 62,
+    "ChickenEggsLayed": 32
+  },
+  "monstersKilled": {
+    "Green Slime": 259,
+    "Dust Spirit": 240,
+    "Frost Bat": 226,
+    "Frost Jelly": 179,
+    "Skeleton": 123,
+    "Sludge": 122,
+    "Lava Bat": 119,
+    "Fly": 117,
+    "Bug": 102,
+    "Shadow Brute": 52,
+    "Grub": 38,
+    "Bat": 34,
+    "Metal Head": 31,
+    "Rock Crab": 29,
+    "Shadow Shaman": 28,
+    "Ghost": 20,
+    "Stone Golem": 15,
+    "Lava Crab": 15,
+    "Duggy": 12,
+    "Serpent": 12,
+    "Big Slime": 11,
+    "Squid Kid": 8,
+    "Carbon Ghost": 2
+  },
+  "achievements": [
+    0,
+    1,
+    2,
+    6,
+    7,
+    11,
+    12,
+    13,
+    18,
+    20,
+    21,
+    24,
+    25,
+    27,
+    28,
+    29,
+    37,
+    38
+  ],
+  "friendships": [
+    {
+      "name": "Lewis",
+      "points": 2749,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Primavera 7, Ano 2"
+    },
+    {
+      "name": "Leah",
+      "points": 2749,
+      "hearts": 10,
+      "status": "Dating",
+      "lastGift": "Outono 12, Ano 2"
+    },
+    {
+      "name": "Pam",
+      "points": 2749,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Verão 6, Ano 2"
+    },
+    {
+      "name": "Clint",
+      "points": 2732,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Inverno 26, Ano 1"
+    },
+    {
+      "name": "Gus",
+      "points": 2634,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Verão 8, Ano 2"
+    },
+    {
+      "name": "Linus",
+      "points": 2618,
+      "hearts": 10,
+      "status": "Friendly",
+      "lastGift": "Verão 17, Ano 2"
+    },
+    {
+      "name": "Robin",
+      "points": 2378,
+      "hearts": 9,
+      "status": "Friendly",
+      "lastGift": "Primavera 28, Ano 2"
+    },
+    {
+      "name": "Harvey",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Inverno 28, Ano 1"
+    },
+    {
+      "name": "Emily",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Primavera 27, Ano 2"
+    },
+    {
+      "name": "Sam",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 17, Ano 2"
+    },
+    {
+      "name": "Shane",
+      "points": 2249,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Outono 10, Ano 2"
+    },
+    {
+      "name": "Willy",
+      "points": 2122,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 24, Ano 2"
+    },
+    {
+      "name": "Marnie",
+      "points": 2073,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Outono 13, Ano 2"
+    },
+    {
+      "name": "Penny",
+      "points": 2067,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Outono 2, Ano 2"
+    },
+    {
+      "name": "Evelyn",
+      "points": 2061,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 24, Ano 2"
+    },
+    {
+      "name": "Alex",
+      "points": 2050,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 13, Ano 2"
+    },
+    {
+      "name": "Caroline",
+      "points": 2036,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 24, Ano 2"
+    },
+    {
+      "name": "Demetrius",
+      "points": 2000,
+      "hearts": 8,
+      "status": "Friendly",
+      "lastGift": "Verão 19, Ano 2"
+    },
+    {
+      "name": "Pierre",
+      "points": 1860,
+      "hearts": 7,
+      "status": "Friendly",
+      "lastGift": "Primavera 26, Ano 2"
+    },
+    {
+      "name": "Sebastian",
+      "points": 1835,
+      "hearts": 7,
+      "status": "Friendly",
+      "lastGift": "Inverno 10, Ano 1"
+    },
+    {
+      "name": "Vincent",
+      "points": 1692,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Primavera 10, Ano 2"
+    },
+    {
+      "name": "Maru",
+      "points": 1640,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Verão 17, Ano 2"
+    },
+    {
+      "name": "Jodi",
+      "points": 1559,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Outono 28, Ano 1"
+    },
+    {
+      "name": "Abigail",
+      "points": 1542,
+      "hearts": 6,
+      "status": "Friendly",
+      "lastGift": "Inverno 6, Ano 1"
+    },
+    {
+      "name": "George",
+      "points": 1347,
+      "hearts": 5,
+      "status": "Friendly",
+      "lastGift": "Primavera 10, Ano 2"
+    },
+    {
+      "name": "Haley",
+      "points": 1298,
+      "hearts": 5,
+      "status": "Friendly",
+      "lastGift": "Primavera 14, Ano 2"
+    },
+    {
+      "name": "Kent",
+      "points": 1275,
+      "hearts": 5,
+      "status": "Friendly",
+      "lastGift": "Outono 13, Ano 2"
+    },
+    {
+      "name": "Elliott",
+      "points": 1219,
+      "hearts": 4,
+      "status": "Friendly",
+      "lastGift": "Outono 5, Ano 2"
+    },
+    {
+      "name": "Jas",
+      "points": 1071,
+      "hearts": 4,
+      "status": "Friendly",
+      "lastGift": "Outono 2, Ano 2"
+    },
+    {
+      "name": "Wizard",
+      "points": 907,
+      "hearts": 3,
+      "status": "Friendly",
+      "lastGift": "Inverno 17, Ano 1"
+    },
+    {
+      "name": "Dwarf",
+      "points": 686,
+      "hearts": 2,
+      "status": "Friendly",
+      "lastGift": "Verão 22, Ano 2"
+    },
+    {
+      "name": "Sandy",
+      "points": 153,
+      "hearts": 0,
+      "status": "Friendly",
+      "lastGift": null
+    }
+  ],
+  "shipped": [
+    {
+      "id": "342",
+      "name": "Conserva (vegetal variado)",
+      "qty": 394,
+      "isGenericId": true
+    },
+    {
+      "id": "344",
+      "name": "Geleia (fruta variada)",
+      "qty": 349,
+      "isGenericId": true
+    },
+    {
+      "id": "303",
+      "name": "Pale Ale",
+      "qty": 236,
+      "isGenericId": false
+    },
+    {
+      "id": "348",
+      "name": "Vinho (fruta variada)",
+      "qty": 181,
+      "isGenericId": true
+    },
+    {
+      "id": "192",
+      "name": "Potato",
+      "qty": 94,
+      "isGenericId": false
+    },
+    {
+      "id": "771",
+      "name": "Fiber",
+      "qty": 70,
+      "isGenericId": false
+    },
+    {
+      "id": "24",
+      "name": "Parsnip",
+      "qty": 54,
+      "isGenericId": false
+    },
+    {
+      "id": "260",
+      "name": "Hot Pepper",
+      "qty": 52,
+      "isGenericId": false
+    },
+    {
+      "id": "DriedFruit",
+      "name": "Dried Cranberries",
+      "qty": 46,
+      "isGenericId": false
+    },
+    {
+      "id": "188",
+      "name": "Green Bean",
+      "qty": 45,
+      "isGenericId": false
+    },
+    {
+      "id": "400",
+      "name": "Strawberry",
+      "qty": 36,
+      "isGenericId": false
+    },
+    {
+      "id": "92",
+      "name": "Sap",
+      "qty": 35,
+      "isGenericId": false
+    },
+    {
+      "id": "702",
+      "name": "Chub",
+      "qty": 32,
+      "isGenericId": false
+    },
+    {
+      "id": "256",
+      "name": "Tomato",
+      "qty": 32,
+      "isGenericId": false
+    },
+    {
+      "id": "258",
+      "name": "Blueberry",
+      "qty": 22,
+      "isGenericId": false
+    },
+    {
+      "id": "137",
+      "name": "Rarecrow",
+      "qty": 16,
+      "isGenericId": false
+    },
+    {
+      "id": "SummerSquash",
+      "name": "Summer Squash",
+      "qty": 14,
+      "isGenericId": false
+    },
+    {
+      "id": "350",
+      "name": "Suco (vegetal variado)",
+      "qty": 12,
+      "isGenericId": true
+    },
+    {
+      "id": "145",
+      "name": "Sunfish",
+      "qty": 10,
+      "isGenericId": false
+    },
+    {
+      "id": "142",
+      "name": "Carp",
+      "qty": 10,
+      "isGenericId": false
+    },
+    {
+      "id": "330",
+      "name": "Clay",
+      "qty": 6,
+      "isGenericId": false
+    },
+    {
+      "id": "18",
+      "name": "Daffodil",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "138",
+      "name": "Rainbow Trout",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "144",
+      "name": "Pike",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "306",
+      "name": "Mayonnaise",
+      "qty": 5,
+      "isGenericId": false
+    },
+    {
+      "id": "156",
+      "name": "Ghostfish",
+      "qty": 4,
+      "isGenericId": false
+    },
+    {
+      "id": "SmokedFish",
+      "name": "Item #SmokedFish",
+      "qty": 4,
+      "isGenericId": false
+    },
+    {
+      "id": "372",
+      "name": "Clam",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "131",
+      "name": "Sardine",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "136",
+      "name": "Largemouth Bass",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "140",
+      "name": "Rarecrow",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "700",
+      "name": "Bullhead",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "141",
+      "name": "Item #141",
+      "qty": 3,
+      "isGenericId": false
+    },
+    {
+      "id": "146",
+      "name": "Campfire",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "132",
+      "name": "Bream",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "706",
+      "name": "Item #706",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "705",
+      "name": "Item #705",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "708",
+      "name": "Item #708",
+      "qty": 2,
+      "isGenericId": false
+    },
+    {
+      "id": "22",
+      "name": "Dandelion",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "20",
+      "name": "Leek",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "382",
+      "name": "Coal",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "190",
+      "name": "Cauliflower",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "717",
+      "name": "Crab",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "723",
+      "name": "Oyster",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "734",
+      "name": "Item #734",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "130",
+      "name": "Chest",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "698",
+      "name": "Item #698",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "701",
+      "name": "Item #701",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "147",
+      "name": "Herring",
+      "qty": 1,
+      "isGenericId": false
+    },
+    {
+      "id": "335",
+      "name": "Iron Bar",
+      "qty": 1,
+      "isGenericId": false
+    }
+  ],
+  "crops": {
+    "byType": [
+      {
+        "name": "Pumpkin",
+        "count": 108,
+        "fullyGrown": 4,
+        "dead": 0
+      },
+      {
+        "name": "Cranberries",
+        "count": 103,
+        "fullyGrown": 103,
+        "dead": 0
+      },
+      {
+        "name": "Hot Pepper",
+        "count": 18,
+        "fullyGrown": 0,
+        "dead": 18
+      },
+      {
+        "name": "Sunflower",
+        "count": 13,
+        "fullyGrown": 12,
+        "dead": 0
+      },
+      {
+        "name": "Corn",
+        "count": 9,
+        "fullyGrown": 9,
+        "dead": 0
+      },
+      {
+        "name": "Ancient Fruit",
+        "count": 3,
+        "fullyGrown": 3,
+        "dead": 0
+      },
+      {
+        "name": "Broccoli",
+        "count": 3,
+        "fullyGrown": 3,
+        "dead": 0
+      },
+      {
+        "name": "Tomato",
+        "count": 2,
+        "fullyGrown": 0,
+        "dead": 2
+      },
+      {
+        "name": "Fairy Rose",
+        "count": 2,
+        "fullyGrown": 2,
+        "dead": 0
+      },
+      {
+        "name": "Artichoke",
+        "count": 1,
+        "fullyGrown": 1,
+        "dead": 0
+      }
+    ],
+    "totalTiles": 262,
+    "fullyGrown": 137,
+    "dead": 20,
+    "growing": 105,
+    "daysLeftInSeason": 13,
+    "seasonEndRisk": {
+      "tilesAtRisk": 0,
+      "valueAtRisk": 0,
+      "byType": []
+    },
+    "roiPerTile": [
+      {
+        "name": "Pumpkin",
+        "daysToHarvest": 9,
+        "price": 320,
+        "roiPerDay": 35.6,
+        "tiles": 108
+      },
+      {
+        "name": "Fairy Rose",
+        "daysToHarvest": 9,
+        "price": 290,
+        "roiPerDay": 32.2,
+        "tiles": 2
+      },
+      {
+        "name": "Artichoke",
+        "daysToHarvest": 6,
+        "price": 160,
+        "roiPerDay": 26.7,
+        "tiles": 1
+      },
+      {
+        "name": "Ancient Fruit",
+        "daysToHarvest": 28,
+        "price": 550,
+        "roiPerDay": 19.6,
+        "tiles": 3
+      },
+      {
+        "name": "Cranberries",
+        "daysToHarvest": 5,
+        "price": 75,
+        "roiPerDay": 15.0,
+        "tiles": 103
+      },
+      {
+        "name": "Sunflower",
+        "daysToHarvest": 6,
+        "price": 80,
+        "roiPerDay": 13.3,
+        "tiles": 13
+      },
+      {
+        "name": "Broccoli",
+        "daysToHarvest": 8,
+        "price": 70,
+        "roiPerDay": 8.8,
+        "tiles": 3
+      },
+      {
+        "name": "Hot Pepper",
+        "daysToHarvest": 5,
+        "price": 40,
+        "roiPerDay": 8.0,
+        "tiles": 18
+      },
+      {
+        "name": "Tomato",
+        "daysToHarvest": 11,
+        "price": 60,
+        "roiPerDay": 5.5,
+        "tiles": 2
+      },
+      {
+        "name": "Corn",
+        "daysToHarvest": 14,
+        "price": 50,
+        "roiPerDay": 3.6,
+        "tiles": 9
+      }
+    ]
+  },
+  "sprinklers": {
+    "counts": {
+      "Sprinkler": 1,
+      "Quality Sprinkler": 39,
+      "Iridium Sprinkler": 1
+    },
+    "coverageCapacity": 340
+  },
+  "animals": [
+    {
+      "name": "Pipoca",
+      "type": "Brown Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Pintadinha",
+      "type": "Brown Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Grisbela",
+      "type": "Brown Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Carijó",
+      "type": "White Chicken",
+      "building": "Coop",
+      "friendship": 120,
+      "friendshipPct": 12.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Bonita",
+      "type": "White Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Estrela",
+      "type": "Brown Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Branca",
+      "type": "White Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    },
+    {
+      "name": "Mimosa",
+      "type": "White Cow",
+      "building": "Barn",
+      "friendship": 30,
+      "friendshipPct": 3.0,
+      "happiness": 255,
+      "happinessPct": 100.0
+    }
+  ],
+  "buildings": {
+    "Farmhouse": 1,
+    "Greenhouse": 1,
+    "Shipping Bin": 1,
+    "Pet Bowl": 1,
+    "Coop": 1,
+    "Barn": 1
+  },
+  "exploration": {
+    "totalExisting": 79,
+    "totalVisited": 46,
+    "notVisited": [
+      {
+        "name": "BoatTunnel",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "BugLand",
+        "locked": true,
+        "reason": "Requer a Chave Enferrujada"
+      },
+      {
+        "name": "Caldera",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "CaptainRoom",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "Club",
+        "locked": true,
+        "reason": "Requer o Cartão do Clube"
+      },
+      {
+        "name": "Greenhouse",
+        "locked": true,
+        "reason": "Estufa ainda não desbloqueada"
+      },
+      {
+        "name": "IslandEast",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandFarmCave",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandFarmHouse",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandFieldOffice",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandHut",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandNorth",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandNorthCave1",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandShrine",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandSouth",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandSouthEast",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandSouthEastCave",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandWest",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "IslandWestCave1",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "LeoTreeHouse",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "MasteryCave",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "QiNutRoom",
+        "locked": true,
+        "reason": "Requer conserto do barco (Ilha Ginger)"
+      },
+      {
+        "name": "Sewer",
+        "locked": true,
+        "reason": "Requer a Chave Enferrujada"
+      },
+      {
+        "name": "WitchHut",
+        "locked": true,
+        "reason": "Requer o Talismã Sombrio"
+      },
+      {
+        "name": "WitchSwamp",
+        "locked": true,
+        "reason": "Requer o Talismã Sombrio"
+      },
+      {
+        "name": "WitchWarpCave",
+        "locked": true,
+        "reason": "Requer o Talismã Sombrio"
+      },
+      {
+        "name": "WizardHouseBasement",
+        "locked": true,
+        "reason": "Requer a Tinta Mágica"
+      },
+      {
+        "name": "AbandonedJojaMart",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "BathHouse_WomensLocker",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "LewisBasement",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "MovieTheater",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "Summit",
+        "locked": false,
+        "reason": null
+      },
+      {
+        "name": "Trailer_Big",
+        "locked": false,
+        "reason": null
+      }
+    ]
+  },
+  "machines": {
+    "counts": {
+      "Keg": 62,
+      "Preserves Jar": 18,
+      "Crab Pot": 3,
+      "Tapper": 13,
+      "Furnace": 6,
+      "Bee House": 1,
+      "Crystalarium": 1,
+      "Seed Maker": 1,
+      "Charcoal Kiln": 9,
+      "Mayonnaise Machine": 1,
+      "Cheese Press": 1,
+      "Oil Maker": 1
+    },
+    "active": {
+      "Keg": 59,
+      "Preserves Jar": 18,
+      "Tapper": 13,
+      "Bee House": 1,
+      "Crystalarium": 1
+    }
+  },
+  "finance": {
+    "rawValue": 340112.0,
+    "rawPotentialValue": 1031655.0,
+    "artisanStockValue": 19100.0,
+    "readyValue": 100.0,
+    "brewingValue": 107190.0,
+    "machinesReady": 1,
+    "machinesBrewing": 91,
+    "topRawItems": [
+      {
+        "name": "Starfruit",
+        "stack": 116,
+        "value": 116250.0,
+        "potential": 348750.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Strawberry",
+        "stack": 334,
+        "value": 54030.0,
+        "potential": 162090.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Cranberries",
+        "stack": 459,
+        "value": 39319.0,
+        "potential": 117956.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Hops",
+        "stack": 1253,
+        "value": 39306.0,
+        "potential": 141262.0,
+        "method": "Jar -> Conserva"
+      },
+      {
+        "name": "Melon",
+        "stack": 67,
+        "value": 25125.0,
+        "potential": 75375.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Ancient Fruit",
+        "stack": 20,
+        "value": 14575.0,
+        "potential": 43725.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Hot Pepper",
+        "stack": 129,
+        "value": 6810.0,
+        "potential": 20600.0,
+        "method": "Keg -> Vinho"
+      },
+      {
+        "name": "Corn",
+        "stack": 102,
+        "value": 6325.0,
+        "potential": 17750.0,
+        "method": "Jar -> Conserva"
+      },
+      {
+        "name": "Pumpkin",
+        "stack": 12,
+        "value": 5680.0,
+        "potential": 12780.0,
+        "method": "Keg -> Suco"
+      },
+      {
+        "name": "Tomato",
+        "stack": 56,
+        "value": 4755.0,
+        "potential": 12310.0,
+        "method": "Jar -> Conserva"
+      }
+    ],
+    "topArtisanItems": [
+      {
+        "name": "Maple Syrup",
+        "value": 7200.0
+      },
+      {
+        "name": "Pine Tar",
+        "value": 4600.0
+      },
+      {
+        "name": "Wild Honey",
+        "value": 1100.0
+      },
+      {
+        "name": "Melon Wine",
+        "value": 750.0
+      },
+      {
+        "name": "Pumpkin Juice",
+        "value": 720.0
+      },
+      {
+        "name": "Pickled Pumpkin",
+        "value": 690.0
+      },
+      {
+        "name": "Pale Ale",
+        "value": 600.0
+      },
+      {
+        "name": "Melon Jelly",
+        "value": 550.0
+      },
+      {
+        "name": "Blueberry Jelly",
+        "value": 450.0
+      },
+      {
+        "name": "Pickled Yam",
+        "value": 370.0
+      }
+    ],
+    "rawUnitsTotal": 2935
+  },
+  "kpis": {
+    "money": {
+      "label": "Dinheiro em caixa",
+      "target": 250000,
+      "actual": 152631,
+      "unit": "g"
+    },
+    "totalEarned": {
+      "label": "Total ganho (histórico)",
+      "target": 1000000,
+      "actual": 548625,
+      "unit": "g"
+    },
+    "skillAvg": {
+      "label": "Média das habilidades",
+      "target": 10,
+      "actual": 7.7,
+      "unit": "",
+      "worst": "luck"
+    },
+    "machineUptime": {
+      "label": "Máquinas em produção",
+      "target": 100,
+      "actual": 78.6,
+      "unit": "%"
+    },
+    "cropMaturity": {
+      "label": "Plantações maduras",
+      "target": 100,
+      "actual": 52.3,
+      "unit": "%"
+    },
+    "cropLoss": {
+      "label": "Plantações mortas",
+      "target": 0,
+      "actual": 7.6,
+      "unit": "%",
+      "inverse": true
+    },
+    "irrigation": {
+      "label": "Cobertura de irrigação (teto)",
+      "target": 100,
+      "actual": 100,
+      "unit": "%"
+    },
+    "seasonRisk": {
+      "label": "Tiles em risco na virada da estação",
+      "target": 0,
+      "actual": 0.0,
+      "unit": "%",
+      "inverse": true
+    },
+    "friendshipAvg": {
+      "label": "Média de corações (NPCs)",
+      "target": 10,
+      "actual": 7.0,
+      "unit": "♥"
+    },
+    "npcsMaxed": {
+      "label": "NPCs com 10♥+",
+      "target": 32,
+      "actual": 6,
+      "unit": ""
+    },
+    "dailyRunRate": {
+      "label": "Receita média/dia (histórico)",
+      "target": null,
+      "actual": 2998.0,
+      "unit": "g/dia"
+    }
+  },
+  "projection": {
+    "dailyRunRate": 2998.0,
+    "machines": {
+      "keg": {
+        "total": 62,
+        "active": 59,
+        "idle": 3
+      },
+      "jar": {
+        "total": 18,
+        "active": 18,
+        "idle": 0
+      },
+      "cask": {
+        "total": 0,
+        "active": 0,
+        "idle": 0
+      },
+      "tapper": {
+        "total": 13,
+        "active": 13,
+        "idle": 0
+      }
+    },
+    "rawUnitsTotal": 2935,
+    "scenarioSellRawNow": 359312.0,
+    "scenarioProcessFirst": 1158045.0,
+    "processingGain": 798733.0,
+    "processingGainPct": 222.3,
+    "brewingValue": 107190.0,
+    "moneyIfSellRawNow": 511943.0,
+    "moneyIfProcessFirst": 1310676.0
+  }
+};
+render(EMBEDDED_DATA);
+
+function kpiCard(label, value, sub, borderClass) {
+    return el('div', {class: `card-nfb kpi-card ${borderClass||''}`}, [
+        el('p', {class:'text-xs font-black text-slate-400 uppercase tracking-widest mb-3', text:label}),
+        el('p', {class:'text-3xl font-black text-slate-900 tracking-tight mb-1', text:String(value)}),
+        el('p', {class:'text-xs text-slate-400 font-medium', text:sub||''}),
+    ]);
+}
+
+function render(d) {
+    document.getElementById('sidebar-farm-name').textContent = `Fazenda ${d.overview.farmName}`;
+    document.getElementById('sidebar-date').textContent = `${d.overview.season} ${d.overview.day} · Ano ${d.overview.year}`;
+    document.getElementById('sidebar-player-name').textContent = d.overview.playerName;
+    document.getElementById('sidebar-avatar').textContent = (d.overview.playerName||'?').slice(0,2).toUpperCase();
+    switchView('overview');
+
+    // ===== OVERVIEW =====
+    const kpiRow = document.getElementById('kpi-overview-row');
+    [
+        ['Dinheiro em caixa', fmtG(d.overview.money), `total ganho: ${fmtG(d.overview.totalMoneyEarned)}`],
+        ['Dias jogados', fmt(d.stats.daysPlayed), ''],
+        ['Itens enviados', fmt(d.stats.itemsShipped), `${fmt(d.stats.fishCaught)} peixes`],
+        ['Plantações', fmt(d.crops.totalTiles), `${fmt(d.crops.fullyGrown)} maduras · ${fmt(d.crops.dead)} mortas`],
+    ].forEach(([label,value,sub]) => kpiRow.appendChild(kpiCard(label,value,sub)));
+
+    // Resumo por aba — um card por view, clicável, com o número mais importante dela
+    const kpiEntries = Object.values(d.kpis).filter(k => k.target !== null);
+    const metasAtGoal = kpiEntries.filter(k => k.inverse ? k.actual <= k.target : k.actual >= k.target).length;
+    const summaryCards = [
+        ['metas', '🎯', 'Metas', `${metasAtGoal}/${kpiEntries.length}`, 'na meta'],
+        ['finance', '💰', 'Financeiro', `+${fmt(d.projection.processingGainPct)}%`, 'crua vs. processada'],
+        ['crops', '🌾', 'Plantações', `${fmt(d.kpis.cropMaturity.actual)}%`, `maduras · ${fmt(d.kpis.irrigation.actual)}% irrigação`],
+        ['animals', '🐔', 'Animais & Relações', `${fmt(d.kpis.friendshipAvg.actual)}♥`, `${d.animals.length} animais`],
+        ['production', '🏭', 'Máquinas & Envios', `${fmt(d.kpis.machineUptime.actual)}%`, 'em produção'],
+        ['achv', '🏆', 'Conquistas', String(d.achievements.length), ''],
+    ];
+    const summaryGrid = document.getElementById('section-summary-grid');
+    summaryCards.forEach(([view, icon, label, value, sub]) => {
+        const card = el('div', {
+            class: 'card-nfb kpi-card cursor-pointer hover:border-primary/40 hover:-translate-y-0.5',
+            onclick: `switchView('${view}')`,
+        }, [
+            el('div', {class:'flex items-center justify-between mb-2'}, [
+                el('span', {class:'text-xl', text: icon}),
+                el('span', {class:'text-slate-300 text-xs font-black', text:'→'}),
+            ]),
+            el('p', {class:'text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1', text:label}),
+            el('p', {class:'text-2xl font-black text-slate-900 tracking-tight mb-1', text:value}),
+            el('p', {class:'text-[11px] text-slate-400 font-medium leading-snug', text:sub}),
+        ]);
+        summaryGrid.appendChild(card);
+    });
+
+    new Chart(document.getElementById('chart-skills'), {
+        type: 'bar',
+        data: {
+            labels: ['Fazenda','Mineração','Combate','Coleta','Pesca','Sorte'],
+            datasets: [{
+                data: Object.values(d.skills),
+                backgroundColor: Object.values(d.skills).map(v => v>=10?CHART_COLORS.good:v>=5?CHART_COLORS.primary:CHART_COLORS.crit),
+                borderRadius: 6, maxBarThickness: 28,
+            }]
+        },
+        options: { indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{min:0,max:10,grid:{color:'#f1f5f9'}}, y:{grid:{display:false}}} }
+    });
+
+    const topCrops = d.crops.byType.slice(0,10);
+    new Chart(document.getElementById('chart-crops'), {
+        type: 'bar',
+        data: {
+            labels: topCrops.map(c=>c.name),
+            datasets: [
+                {label:'Madura', data: topCrops.map(c=>c.fullyGrown), backgroundColor: CHART_COLORS.good, stack:'s'},
+                {label:'Crescendo', data: topCrops.map(c=>c.count-c.fullyGrown-c.dead), backgroundColor: CHART_COLORS.s1, stack:'s'},
+                {label:'Morta', data: topCrops.map(c=>c.dead), backgroundColor: CHART_COLORS.crit, stack:'s'},
+            ]
+        },
+        options: { indexAxis:'y', plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:10}}}},
+            scales:{x:{stacked:true,grid:{color:'#f1f5f9'}}, y:{stacked:true,grid:{display:false}}} }
+    });
+
+    // ===== METAS =====
+    const kpiMetas = document.getElementById('kpi-metas-grid');
+    Object.values(d.kpis).forEach(k => {
+        if (k.target === null) { kpiMetas.appendChild(kpiCard(k.label, `${fmt(k.actual)}${k.unit}`, 'sem meta')); return; }
+        const pct = k.inverse ? Math.max(0,100-(k.actual/(k.target||1)*100)) : Math.min(100,(k.actual/(k.target||1)*100));
+        const atGoal = k.inverse ? k.actual <= k.target : k.actual >= k.target;
+        const barColor = atGoal ? CHART_COLORS.good : (pct>=70?CHART_COLORS.warn:CHART_COLORS.crit);
+        const card = el('div',{class:'card-nfb kpi-card'},[
+            el('div',{class:'flex justify-between items-start mb-3'},[
+                el('p',{class:'text-xs font-black text-slate-400 uppercase tracking-widest', text:k.label}),
+                el('span',{class:`status-badge ${atGoal?'badge-green':(pct>=70?'badge-orange':'badge-red')}`, text: atGoal?'META':'FALTA'}),
+            ]),
+            el('div',{class:'flex items-baseline gap-1 mb-3'},[
+                el('span',{class:'text-2xl font-black text-slate-900', text:`${fmt(k.actual)}${k.unit}`}),
+                el('span',{class:'text-xs font-bold text-slate-400', text:`/ ${fmt(k.target)}${k.unit}`}),
+            ]),
+            el('div',{class:'h-2 bg-slate-100 rounded-full overflow-hidden'},[
+                el('div',{style:`width:${pct}%;height:100%;background:${barColor};border-radius:4px;`}),
+            ]),
+        ]);
+        kpiMetas.appendChild(card);
+    });
+
+    // ===== FINANCE =====
+    const p = d.projection;
+    document.getElementById('fin-scenario-a').textContent = fmt(p.scenarioSellRawNow);
+    document.getElementById('fin-scenario-a-sub').textContent = `Caixa: ${fmtG(p.moneyIfSellRawNow)}`;
+    document.getElementById('fin-scenario-b').textContent = fmt(p.scenarioProcessFirst);
+    document.getElementById('fin-scenario-b-sub').textContent = `Caixa: ${fmtG(p.moneyIfProcessFirst)}`;
+    document.getElementById('fin-gain').textContent = `+${fmtG(p.processingGain)} (${fmt(p.processingGainPct)}%)`;
+
+    const cap = p.machines;
+    const capGrid = document.getElementById('fin-capacity-grid');
+    [
+        ['Kegs', `${cap.keg.active}/${cap.keg.total}`, `${cap.keg.idle} livres`],
+        ['Preserves Jars', `${cap.jar.active}/${cap.jar.total}`, `${cap.jar.idle} livres`],
+        ['Casks', `${cap.cask.active}/${cap.cask.total}`, `${cap.cask.idle} livres`],
+        ['Tappers', `${cap.tapper.active}/${cap.tapper.total}`, `${cap.tapper.idle} livres`],
+        ['Matéria-prima', `${fmt(p.rawUnitsTotal)}`, 'unidades em estoque'],
+    ].forEach(([label,value,sub]) => capGrid.appendChild(kpiCard(label,value,sub)));
+
+    const rawBody = document.getElementById('raw-table-body');
+    d.finance.topRawItems.forEach(r => {
+        rawBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:fmt(r.stack)}),
+            el('td',{class:'tbl-td', text:fmtG(r.value)}), el('td',{class:'tbl-td text-primary font-bold', text:fmtG(r.potential)}),
+        ]));
+    });
+
+    const roiBody = document.getElementById('roi-table-body');
+    d.crops.roiPerTile.slice(0,10).forEach(r => {
+        roiBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:String(r.tiles)}),
+            el('td',{class:'tbl-td', text:String(r.daysToHarvest)}), el('td',{class:'tbl-td text-primary font-bold', text:fmtG(r.roiPerDay)}),
+        ]));
+    });
+
+    // ===== CROPS =====
+    const kpiCrops = document.getElementById('kpi-crops-row');
+    [
+        ['Total de tiles', fmt(d.crops.totalTiles), 'plantações ativas'],
+        ['Maduras', fmt(d.crops.fullyGrown), `${fmt(d.kpis.cropMaturity.actual)}% do total`],
+        ['Mortas', fmt(d.crops.dead), `${fmt(d.kpis.cropLoss.actual)}% do total`],
+        ['Cobertura de irrigação', `${fmt(d.kpis.irrigation.actual)}%`, 'teto teórico'],
+    ].forEach(([label,value,sub]) => kpiCrops.appendChild(kpiCard(label,value,sub)));
+
+    const sprGrid = document.getElementById('sprinkler-grid');
+    const sprLabels = {'Sprinkler':'Básico (4 tiles)', 'Quality Sprinkler':'Qualidade (8 tiles)', 'Iridium Sprinkler':'Irídio (24 tiles)'};
+    Object.entries(d.sprinklers.counts).forEach(([name,count]) => {
+        sprGrid.appendChild(el('div',{class:'bg-slate-50 rounded-xl p-3 text-center'},[
+            el('p',{class:'text-2xl font-black text-slate-800', text:String(count)}),
+            el('p',{class:'text-[10px] font-black text-slate-400 uppercase', text:sprLabels[name]||name}),
+        ]));
+    });
+    sprGrid.appendChild(el('div',{class:'bg-primaryLighter rounded-xl p-3 text-center col-span-2'},[
+        el('p',{class:'text-2xl font-black text-primary', text:fmt(d.sprinklers.coverageCapacity)+' tiles'}),
+        el('p',{class:'text-[10px] font-black text-primary/70 uppercase', text:'Capacidade total'}),
+    ]));
+
+    document.getElementById('days-left-season').textContent = fmt(d.crops.daysLeftInSeason);
+    const riskBody = document.getElementById('risk-table-body');
+    if (d.crops.seasonEndRisk.byType.length) {
+        d.crops.seasonEndRisk.byType.forEach(r => {
+            riskBody.appendChild(el('tr',{class:'tbl-row'},[
+                el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:String(r.count)}),
+                el('td',{class:'tbl-td', text:fmtG(r.count*r.unitValue)}),
+            ]));
+        });
+    } else {
+        document.getElementById('risk-empty-msg').style.display = 'block';
+    }
+
+    // ===== ANIMALS & SOCIAL =====
+    const animalsBody = document.getElementById('animals-table-body');
+    d.animals.forEach(a => {
+        animalsBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:a.name}), el('td',{class:'tbl-td', text:a.type}),
+            el('td',{class:'tbl-td', text:a.building}), el('td',{class:'tbl-td', text:`${a.friendshipPct}%`}),
+            el('td',{class:'tbl-td', text:`${a.happinessPct}%`}),
+        ]));
+    });
+
+    const friendsBody = document.getElementById('friends-table-body');
+    d.friendships.slice(0,10).forEach(f => {
+        friendsBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:f.name}), el('td',{class:'tbl-td', text:String(f.hearts)}),
+            el('td',{class:'tbl-td'}, [el('span',{class:'status-badge badge-green', text:f.status})]),
+            el('td',{class:'tbl-td text-slate-400', text:f.lastGift||'—'}),
+        ]));
+    });
+
+    // ===== PRODUCTION =====
+    const shippedBody = document.getElementById('shipped-table-body');
+    d.shipped.slice(0,10).forEach(s => {
+        shippedBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:s.name + (s.isGenericId?' *':'')}), el('td',{class:'tbl-td', text:String(s.qty)}),
+        ]));
+    });
+
+    const monstersBody = document.getElementById('monsters-table-body');
+    Object.entries(d.monstersKilled).slice(0,10).forEach(([name,qty]) => {
+        monstersBody.appendChild(el('tr',{class:'tbl-row'},[el('td',{class:'tbl-td font-bold', text:name}), el('td',{class:'tbl-td', text:String(qty)})]));
+    });
+
+    const machinesBody = document.getElementById('machines-table-body');
+    Object.entries(d.machines.counts).sort((a,b)=>b[1]-a[1]).forEach(([name,count]) => {
+        const active = d.machines.active[name]||0;
+        machinesBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:name}), el('td',{class:'tbl-td', text:String(count)}),
+            el('td',{class:'tbl-td', text:String(active)}),
+        ]));
+    });
+
+    // ===== ACHIEVEMENTS =====
+    const achvGrid = document.getElementById('achv-grid');
+    d.achievements.forEach(id => {
+        achvGrid.appendChild(el('span',{class:'status-badge badge-green', text:`#${id}`}));
+    });
+
+    // ===== EXPLORATION =====
+    const ex = d.exploration;
+    const free = ex.notVisited.filter(r => !r.locked);
+    const locked = ex.notVisited.filter(r => r.locked);
+    const kpiExploration = document.getElementById('kpi-exploration-row');
+    [
+        ['Locais visitados', `${ex.totalVisited}/${ex.totalExisting}`, ''],
+        ['Livres pra visitar', String(free.length), ''],
+        ['Ainda trancados', String(locked.length), ''],
+    ].forEach(([label,value,sub]) => kpiExploration.appendChild(kpiCard(label,value,sub)));
+
+    const freeBody = document.getElementById('exploration-free-body');
+    free.forEach(r => freeBody.appendChild(el('tr',{class:'tbl-row'},[el('td',{class:'tbl-td font-bold', text:r.name})])));
+
+    const lockedBody = document.getElementById('exploration-locked-body');
+    locked.forEach(r => lockedBody.appendChild(el('tr',{class:'tbl-row'},[
+        el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td text-slate-400', text:r.reason}),
+    ])));
+}
+</script>
+</body>
+</html>

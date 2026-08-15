@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Operacional | Fazenda Duarte</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#B9800A',
+                primaryDark: '#8F6308',
+                primaryLight: '#E7A72C',
+                primaryLighter: '#FDF1D6',
+                nfbBg: '#FBF9F4'
+            },
+            fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                display: ['Outfit', 'sans-serif']
+            }
+        }
+    }
+}
+</script>
+
+<style type="text/tailwindcss">
+    @layer base {
+        body { @apply bg-nfbBg text-slate-700 antialiased; font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { @apply font-display text-slate-800; }
+    }
+    @layer components {
+        .sidebar { @apply bg-white border-r-4 border-primary fixed h-screen w-64 z-50 flex flex-col overflow-y-auto shadow-xl; }
+        .main-content { @apply ml-64 p-10; }
+        .nav-label { @apply text-[9px] font-black text-slate-300 uppercase tracking-widest mt-6 mb-2 ml-6 block; }
+        .nav-link { @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-500 transition-all mx-3 my-0.5 cursor-pointer; }
+        .nav-link:hover { @apply bg-slate-50 text-primary; }
+        .nav-link.active { @apply bg-primaryLighter text-primary shadow-sm border border-primary/10; }
+        .card-nfb { @apply bg-white border border-slate-200 rounded-[20px] p-6 shadow-sm transition-all hover:shadow-md; }
+        .kpi-card { @apply bg-gradient-to-br from-white to-slate-50 border border-slate-100; }
+        .status-badge { @apply px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider; }
+        .badge-green { @apply bg-green-100 text-green-700; }
+        .badge-red { @apply bg-red-100 text-red-700; }
+        .badge-orange { @apply bg-orange-100 text-orange-700; }
+        .badge-gray { @apply bg-slate-100 text-slate-500; }
+        .view-hidden { display: none !important; }
+        .tbl-th { @apply text-left py-3 px-4 text-xs font-black text-slate-400 uppercase tracking-widest; }
+        .tbl-td { @apply py-3 px-4 text-sm text-slate-700; }
+        .tbl-row { @apply hover:bg-slate-50 transition-all border-b border-slate-100 last:border-0; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { @apply bg-primary/30 rounded-full; }
+    }
+</style>
+</head>
+<body class="bg-nfbBg">
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+    <div class="p-6 flex-1">
+        <div class="mb-8">
+            <img src="stardew_logo.png" alt="Stardew Valley" class="h-11 w-auto object-contain mb-4">
+            <div class="flex items-center gap-2 mb-1">
+                <p class="font-display font-extrabold text-slate-800 leading-none" id="sidebar-farm-name">Fazenda</p>
+            </div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Painel Operacional</p>
+            <div class="h-px bg-slate-100 w-full mb-3"></div>
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest" id="sidebar-date">—</span>
+            </div>
+        </div>
+
+        <nav>
+            <span class="nav-label">Visão</span>
+            <a href="#" onclick="switchView('overview')" id="nav-overview" class="nav-link active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                Visão Geral
+            </a>
+            <a href="#" onclick="switchView('metas')" id="nav-metas" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                Meta × Realizado
+            </a>
+
+            <span class="nav-label">Controladoria</span>
+            <a href="#" onclick="switchView('finance')" id="nav-finance" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Financeiro
+            </a>
+
+            <span class="nav-label">Fazenda</span>
+            <a href="#" onclick="switchView('crops')" id="nav-crops" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9Z"/><path d="M12 22C7.03 22 3 17.97 3 13c4.97 0 9 4.03 9 9Z"/><path d="M12 13c0-4.97 4.03-9 9-9 0 4.97-4.03 9-9 9Z"/><path d="M12 13C12 8.03 7.97 4 3 4c0 4.97 4.03 9 9 9Z"/></svg>
+                Plantações
+            </a>
+            <a href="#" onclick="switchView('animals')" id="nav-animals" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4v7"/><path d="m9 17 6-12"/><circle cx="18" cy="18" r="3"/><circle cx="6" cy="18" r="3"/></svg>
+                Animais & Relações
+            </a>
+
+            <span class="nav-label">Produção</span>
+            <a href="#" onclick="switchView('production')" id="nav-production" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                Máquinas & Envios
+            </a>
+            <a href="#" onclick="switchView('achv')" id="nav-achv" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                Conquistas
+            </a>
+            <a href="#" onclick="switchView('exploration')" id="nav-exploration" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                Exploração
+            </a>
+        </nav>
+    </div>
+
+    <div class="p-5 border-t border-slate-100">
+        <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-black text-sm flex-shrink-0" id="sidebar-avatar">?</div>
+            <div class="flex flex-col min-w-0">
+                <span class="text-sm font-bold text-slate-800" id="sidebar-player-name">—</span>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Dados 100% locais</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main-content min-h-screen">
+    <header class="flex justify-between items-start mb-6 gap-6">
+        <div>
+            <h1 class="text-3xl font-black tracking-tight text-slate-900" id="view-title">Visão Geral</h1>
+            <p class="text-slate-400 font-medium mt-1 text-sm" id="view-subtitle">Carregando...</p>
+        </div>
+    </header>
+
+    <!-- ========== VIEW: OVERVIEW ========== -->
+    <div id="view-overview">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6" id="kpi-overview-row"></div>
+
+        <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-3">Resumo por aba</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8" id="section-summary-grid"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="card-nfb">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-black text-slate-800">Habilidades</h3>
+                    <span class="status-badge badge-green">nível 0–10</span>
+                </div>
+                <div class="h-[260px]"><canvas id="chart-skills"></canvas></div>
+            </div>
+            <div class="card-nfb">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-black text-slate-800">Plantações — top 10</h3>
+                    <span class="status-badge badge-gray">madura / crescendo / morta</span>
+                </div>
+                <div class="h-[260px]"><canvas id="chart-crops"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: METAS ========== -->
+    <div id="view-metas" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="kpi-metas-grid"></div>
+    </div>
+
+    <!-- ========== VIEW: FINANCE ========== -->
+    <div id="view-finance" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            <div class="card-nfb kpi-card">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Cenário A · vender matéria-prima crua</p>
+                <div class="flex items-baseline gap-1 mb-1">
+                    <span class="text-xs font-black text-slate-400">g</span>
+                    <span class="text-3xl font-black text-slate-900 tracking-tight" id="fin-scenario-a">0</span>
+                </div>
+                <p class="text-xs text-slate-400 font-medium" id="fin-scenario-a-sub">—</p>
+            </div>
+            <div class="card-nfb kpi-card border-primary/30" style="background:linear-gradient(135deg,#fff,#FDF1D6)">
+                <p class="text-xs font-black text-primary uppercase tracking-widest mb-3">Cenário B · processar em Keg/Jar antes</p>
+                <div class="flex items-baseline gap-1 mb-1">
+                    <span class="text-xs font-black text-primary">g</span>
+                    <span class="text-3xl font-black text-primary tracking-tight" id="fin-scenario-b">0</span>
+                </div>
+                <p class="text-xs text-slate-500 font-medium" id="fin-scenario-b-sub">—</p>
+            </div>
+        </div>
+
+        <div class="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center justify-between mb-6">
+            <span class="text-xs font-black text-green-700 uppercase tracking-wide">Ganho de processar vs. vender crua</span>
+            <span class="text-lg font-black text-green-700" id="fin-gain">—</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6" id="fin-capacity-grid"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Matéria-prima em estoque (top 10)</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr>
+                            <th class="tbl-th">Item</th><th class="tbl-th">Qtd</th><th class="tbl-th">Valor crua</th><th class="tbl-th">Se processado</th>
+                        </tr></thead>
+                        <tbody id="raw-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">ROI por plantação (g de venda ÷ dias até 1ª colheita)</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr>
+                            <th class="tbl-th">Plantação</th><th class="tbl-th">Tiles</th><th class="tbl-th">Dias</th><th class="tbl-th">g/dia/tile</th>
+                        </tr></thead>
+                        <tbody id="roi-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: CROPS ========== -->
+    <div id="view-crops" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6" id="kpi-crops-row"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="card-nfb">
+                <h3 class="text-base font-black text-slate-800 mb-4">Irrigação — sprinklers</h3>
+                <div class="grid grid-cols-2 gap-3" id="sprinkler-grid"></div>
+                <p class="text-xs text-slate-400 font-medium mt-4">Capacidade teórica, sem contar sobreposição.</p>
+            </div>
+            <div class="card-nfb">
+                <h3 class="text-base font-black text-slate-800 mb-2">Risco de virada de estação</h3>
+                <p class="text-xs text-slate-400 font-medium mb-4"><span id="days-left-season">—</span> dias restantes na estação</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr><th class="tbl-th">Plantação</th><th class="tbl-th">Tiles em risco</th><th class="tbl-th">Valor em risco</th></tr></thead>
+                        <tbody id="risk-table-body"></tbody>
+                    </table>
+                </div>
+                <p class="text-sm text-slate-500 font-medium mt-3" id="risk-empty-msg" style="display:none">Nenhuma em risco.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: ANIMALS & SOCIAL ========== -->
+    <div id="view-animals" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Animais</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr><th class="tbl-th">Nome</th><th class="tbl-th">Tipo</th><th class="tbl-th">Local</th><th class="tbl-th">Amizade</th><th class="tbl-th">Felicidade</th></tr></thead>
+                        <tbody id="animals-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Relacionamentos (top 10)</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr><th class="tbl-th">NPC</th><th class="tbl-th">♥</th><th class="tbl-th">Status</th><th class="tbl-th">Último presente</th></tr></thead>
+                        <tbody id="friends-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: PRODUCTION ========== -->
+    <div id="view-production" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Itens mais enviados</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Item</th><th class="tbl-th">Qtd</th></tr></thead><tbody id="shipped-table-body"></tbody></table>
+                </div>
+                <p class="text-[11px] text-slate-400 font-medium px-6 pb-4">* soma de todas as variantes</p>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Monstros derrotados</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Monstro</th><th class="tbl-th">Qtd</th></tr></thead><tbody id="monsters-table-body"></tbody></table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Máquinas artesanais</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Máquina</th><th class="tbl-th">Instaladas</th><th class="tbl-th">Em uso</th></tr></thead><tbody id="machines-table-body"></tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: ACHIEVEMENTS ========== -->
+    <div id="view-achv" class="view-hidden">
+        <div class="card-nfb">
+            <h3 class="text-base font-black text-slate-800 mb-1">Conquistas desbloqueadas</h3>
+            <p class="text-xs text-slate-400 font-medium mb-5">Só ids — sem nomes inventados.</p>
+            <div class="flex flex-wrap gap-2" id="achv-grid"></div>
+        </div>
+    </div>
+
+    <!-- ========== VIEW: EXPLORATION ========== -->
+    <div id="view-exploration" class="view-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6" id="kpi-exploration-row"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-2">
+                    <h3 class="text-base font-black text-slate-800">Livres pra visitar</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Local</th></tr></thead><tbody id="exploration-free-body"></tbody></table>
+                </div>
+            </div>
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-2">
+                    <h3 class="text-base font-black text-slate-800">Trancados</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full"><thead class="border-b border-slate-100"><tr><th class="tbl-th">Local</th><th class="tbl-th">Motivo</th></tr></thead><tbody id="exploration-locked-body"></tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-slate-400 font-medium mt-10 pt-6 border-t border-slate-200">
+        Save: <code id="save-note">Duarte_443237868</code> · processado localmente, nada enviado à internet.
+    </footer>
+</main>
+
+<script>
+const VIEWS = ['overview','metas','finance','crops','animals','production','achv','exploration'];
+const VIEW_TITLES = {
+    overview: 'Visão Geral', metas: 'Meta × Realizado', finance: 'Financeiro',
+    crops: 'Plantações', animals: 'Animais & Relações', production: 'Máquinas & Envios', achv: 'Conquistas',
+    exploration: 'Exploração',
+};
+const VIEW_SUBTITLES = {
+    overview: '', metas: '',
+    finance: 'Matéria-prima vs. processada',
+    crops: '',
+    animals: '',
+    production: '',
+    achv: '',
+    exploration: '',
+};
+
+function switchView(viewId) {
+    VIEWS.forEach(id => document.getElementById('view-' + id)?.classList.add('view-hidden'));
+    document.getElementById('view-' + viewId)?.classList.remove('view-hidden');
+    VIEWS.forEach(id => document.getElementById('nav-' + id)?.classList.remove('active'));
+    document.getElementById('nav-' + viewId)?.classList.add('active');
+    document.getElementById('view-title').innerText = VIEW_TITLES[viewId] || viewId;
+    document.getElementById('view-subtitle').innerText = VIEW_SUBTITLES[viewId] || '';
+}
+
+function el(tag, attrs={}, children=[]) {
+    const e = document.createElement(tag);
+    for (const [k,v] of Object.entries(attrs)) {
+        if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v; else e.setAttribute(k, v);
+    }
+    for (const c of [].concat(children)) e.appendChild(c);
+    return e;
+}
+const fmt = (n) => Number(n||0).toLocaleString('pt-BR', {maximumFractionDigits:1});
+const fmtG = (n) => `${fmt(n)}g`;
+
+const CHART_COLORS = { good:'#0ca30c', warn:'#eda100', crit:'#d03b3b', s1:'#2a78d6', primary:'#B9800A' };
+
+fetch('data.json').then(r => r.json()).then(render).catch(err => {
+    document.querySelector('main').innerHTML = '<p class="p-10">Erro ao carregar data.json — rode <code>python parse_save.py</code> e sirva esta pasta com um servidor HTTP local.<br>' + err + '</p>';
+});
+
+function kpiCard(label, value, sub, borderClass) {
+    return el('div', {class: `card-nfb kpi-card ${borderClass||''}`}, [
+        el('p', {class:'text-xs font-black text-slate-400 uppercase tracking-widest mb-3', text:label}),
+        el('p', {class:'text-3xl font-black text-slate-900 tracking-tight mb-1', text:String(value)}),
+        el('p', {class:'text-xs text-slate-400 font-medium', text:sub||''}),
+    ]);
+}
+
+function render(d) {
+    document.getElementById('sidebar-farm-name').textContent = `Fazenda ${d.overview.farmName}`;
+    document.getElementById('sidebar-date').textContent = `${d.overview.season} ${d.overview.day} · Ano ${d.overview.year}`;
+    document.getElementById('sidebar-player-name').textContent = d.overview.playerName;
+    document.getElementById('sidebar-avatar').textContent = (d.overview.playerName||'?').slice(0,2).toUpperCase();
+    switchView('overview');
+
+    // ===== OVERVIEW =====
+    const kpiRow = document.getElementById('kpi-overview-row');
+    [
+        ['Dinheiro em caixa', fmtG(d.overview.money), `total ganho: ${fmtG(d.overview.totalMoneyEarned)}`],
+        ['Dias jogados', fmt(d.stats.daysPlayed), ''],
+        ['Itens enviados', fmt(d.stats.itemsShipped), `${fmt(d.stats.fishCaught)} peixes`],
+        ['Plantações', fmt(d.crops.totalTiles), `${fmt(d.crops.fullyGrown)} maduras · ${fmt(d.crops.dead)} mortas`],
+    ].forEach(([label,value,sub]) => kpiRow.appendChild(kpiCard(label,value,sub)));
+
+    // Resumo por aba — um card por view, clicável, com o número mais importante dela
+    const kpiEntries = Object.values(d.kpis).filter(k => k.target !== null);
+    const metasAtGoal = kpiEntries.filter(k => k.inverse ? k.actual <= k.target : k.actual >= k.target).length;
+    const summaryCards = [
+        ['metas', '🎯', 'Metas', `${metasAtGoal}/${kpiEntries.length}`, 'na meta'],
+        ['finance', '💰', 'Financeiro', `+${fmt(d.projection.processingGainPct)}%`, 'crua vs. processada'],
+        ['crops', '🌾', 'Plantações', `${fmt(d.kpis.cropMaturity.actual)}%`, `maduras · ${fmt(d.kpis.irrigation.actual)}% irrigação`],
+        ['animals', '🐔', 'Animais & Relações', `${fmt(d.kpis.friendshipAvg.actual)}♥`, `${d.animals.length} animais`],
+        ['production', '🏭', 'Máquinas & Envios', `${fmt(d.kpis.machineUptime.actual)}%`, 'em produção'],
+        ['achv', '🏆', 'Conquistas', String(d.achievements.length), ''],
+    ];
+    const summaryGrid = document.getElementById('section-summary-grid');
+    summaryCards.forEach(([view, icon, label, value, sub]) => {
+        const card = el('div', {
+            class: 'card-nfb kpi-card cursor-pointer hover:border-primary/40 hover:-translate-y-0.5',
+            onclick: `switchView('${view}')`,
+        }, [
+            el('div', {class:'flex items-center justify-between mb-2'}, [
+                el('span', {class:'text-xl', text: icon}),
+                el('span', {class:'text-slate-300 text-xs font-black', text:'→'}),
+            ]),
+            el('p', {class:'text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1', text:label}),
+            el('p', {class:'text-2xl font-black text-slate-900 tracking-tight mb-1', text:value}),
+            el('p', {class:'text-[11px] text-slate-400 font-medium leading-snug', text:sub}),
+        ]);
+        summaryGrid.appendChild(card);
+    });
+
+    new Chart(document.getElementById('chart-skills'), {
+        type: 'bar',
+        data: {
+            labels: ['Fazenda','Mineração','Combate','Coleta','Pesca','Sorte'],
+            datasets: [{
+                data: Object.values(d.skills),
+                backgroundColor: Object.values(d.skills).map(v => v>=10?CHART_COLORS.good:v>=5?CHART_COLORS.primary:CHART_COLORS.crit),
+                borderRadius: 6, maxBarThickness: 28,
+            }]
+        },
+        options: { indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{min:0,max:10,grid:{color:'#f1f5f9'}}, y:{grid:{display:false}}} }
+    });
+
+    const topCrops = d.crops.byType.slice(0,10);
+    new Chart(document.getElementById('chart-crops'), {
+        type: 'bar',
+        data: {
+            labels: topCrops.map(c=>c.name),
+            datasets: [
+                {label:'Madura', data: topCrops.map(c=>c.fullyGrown), backgroundColor: CHART_COLORS.good, stack:'s'},
+                {label:'Crescendo', data: topCrops.map(c=>c.count-c.fullyGrown-c.dead), backgroundColor: CHART_COLORS.s1, stack:'s'},
+                {label:'Morta', data: topCrops.map(c=>c.dead), backgroundColor: CHART_COLORS.crit, stack:'s'},
+            ]
+        },
+        options: { indexAxis:'y', plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:10}}}},
+            scales:{x:{stacked:true,grid:{color:'#f1f5f9'}}, y:{stacked:true,grid:{display:false}}} }
+    });
+
+    // ===== METAS =====
+    const kpiMetas = document.getElementById('kpi-metas-grid');
+    Object.values(d.kpis).forEach(k => {
+        if (k.target === null) { kpiMetas.appendChild(kpiCard(k.label, `${fmt(k.actual)}${k.unit}`, 'sem meta')); return; }
+        const pct = k.inverse ? Math.max(0,100-(k.actual/(k.target||1)*100)) : Math.min(100,(k.actual/(k.target||1)*100));
+        const atGoal = k.inverse ? k.actual <= k.target : k.actual >= k.target;
+        const barColor = atGoal ? CHART_COLORS.good : (pct>=70?CHART_COLORS.warn:CHART_COLORS.crit);
+        const card = el('div',{class:'card-nfb kpi-card'},[
+            el('div',{class:'flex justify-between items-start mb-3'},[
+                el('p',{class:'text-xs font-black text-slate-400 uppercase tracking-widest', text:k.label}),
+                el('span',{class:`status-badge ${atGoal?'badge-green':(pct>=70?'badge-orange':'badge-red')}`, text: atGoal?'META':'FALTA'}),
+            ]),
+            el('div',{class:'flex items-baseline gap-1 mb-3'},[
+                el('span',{class:'text-2xl font-black text-slate-900', text:`${fmt(k.actual)}${k.unit}`}),
+                el('span',{class:'text-xs font-bold text-slate-400', text:`/ ${fmt(k.target)}${k.unit}`}),
+            ]),
+            el('div',{class:'h-2 bg-slate-100 rounded-full overflow-hidden'},[
+                el('div',{style:`width:${pct}%;height:100%;background:${barColor};border-radius:4px;`}),
+            ]),
+        ]);
+        kpiMetas.appendChild(card);
+    });
+
+    // ===== FINANCE =====
+    const p = d.projection;
+    document.getElementById('fin-scenario-a').textContent = fmt(p.scenarioSellRawNow);
+    document.getElementById('fin-scenario-a-sub').textContent = `Caixa: ${fmtG(p.moneyIfSellRawNow)}`;
+    document.getElementById('fin-scenario-b').textContent = fmt(p.scenarioProcessFirst);
+    document.getElementById('fin-scenario-b-sub').textContent = `Caixa: ${fmtG(p.moneyIfProcessFirst)}`;
+    document.getElementById('fin-gain').textContent = `+${fmtG(p.processingGain)} (${fmt(p.processingGainPct)}%)`;
+
+    const cap = p.machines;
+    const capGrid = document.getElementById('fin-capacity-grid');
+    [
+        ['Kegs', `${cap.keg.active}/${cap.keg.total}`, `${cap.keg.idle} livres`],
+        ['Preserves Jars', `${cap.jar.active}/${cap.jar.total}`, `${cap.jar.idle} livres`],
+        ['Casks', `${cap.cask.active}/${cap.cask.total}`, `${cap.cask.idle} livres`],
+        ['Tappers', `${cap.tapper.active}/${cap.tapper.total}`, `${cap.tapper.idle} livres`],
+        ['Matéria-prima', `${fmt(p.rawUnitsTotal)}`, 'unidades em estoque'],
+    ].forEach(([label,value,sub]) => capGrid.appendChild(kpiCard(label,value,sub)));
+
+    const rawBody = document.getElementById('raw-table-body');
+    d.finance.topRawItems.forEach(r => {
+        rawBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:fmt(r.stack)}),
+            el('td',{class:'tbl-td', text:fmtG(r.value)}), el('td',{class:'tbl-td text-primary font-bold', text:fmtG(r.potential)}),
+        ]));
+    });
+
+    const roiBody = document.getElementById('roi-table-body');
+    d.crops.roiPerTile.slice(0,10).forEach(r => {
+        roiBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:String(r.tiles)}),
+            el('td',{class:'tbl-td', text:String(r.daysToHarvest)}), el('td',{class:'tbl-td text-primary font-bold', text:fmtG(r.roiPerDay)}),
+        ]));
+    });
+
+    // ===== CROPS =====
+    const kpiCrops = document.getElementById('kpi-crops-row');
+    [
+        ['Total de tiles', fmt(d.crops.totalTiles), 'plantações ativas'],
+        ['Maduras', fmt(d.crops.fullyGrown), `${fmt(d.kpis.cropMaturity.actual)}% do total`],
+        ['Mortas', fmt(d.crops.dead), `${fmt(d.kpis.cropLoss.actual)}% do total`],
+        ['Cobertura de irrigação', `${fmt(d.kpis.irrigation.actual)}%`, 'teto teórico'],
+    ].forEach(([label,value,sub]) => kpiCrops.appendChild(kpiCard(label,value,sub)));
+
+    const sprGrid = document.getElementById('sprinkler-grid');
+    const sprLabels = {'Sprinkler':'Básico (4 tiles)', 'Quality Sprinkler':'Qualidade (8 tiles)', 'Iridium Sprinkler':'Irídio (24 tiles)'};
+    Object.entries(d.sprinklers.counts).forEach(([name,count]) => {
+        sprGrid.appendChild(el('div',{class:'bg-slate-50 rounded-xl p-3 text-center'},[
+            el('p',{class:'text-2xl font-black text-slate-800', text:String(count)}),
+            el('p',{class:'text-[10px] font-black text-slate-400 uppercase', text:sprLabels[name]||name}),
+        ]));
+    });
+    sprGrid.appendChild(el('div',{class:'bg-primaryLighter rounded-xl p-3 text-center col-span-2'},[
+        el('p',{class:'text-2xl font-black text-primary', text:fmt(d.sprinklers.coverageCapacity)+' tiles'}),
+        el('p',{class:'text-[10px] font-black text-primary/70 uppercase', text:'Capacidade total'}),
+    ]));
+
+    document.getElementById('days-left-season').textContent = fmt(d.crops.daysLeftInSeason);
+    const riskBody = document.getElementById('risk-table-body');
+    if (d.crops.seasonEndRisk.byType.length) {
+        d.crops.seasonEndRisk.byType.forEach(r => {
+            riskBody.appendChild(el('tr',{class:'tbl-row'},[
+                el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:String(r.count)}),
+                el('td',{class:'tbl-td', text:fmtG(r.count*r.unitValue)}),
+            ]));
+        });
+    } else {
+        document.getElementById('risk-empty-msg').style.display = 'block';
+    }
+
+    // ===== ANIMALS & SOCIAL =====
+    const animalsBody = document.getElementById('animals-table-body');
+    d.animals.forEach(a => {
+        animalsBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:a.name}), el('td',{class:'tbl-td', text:a.type}),
+            el('td',{class:'tbl-td', text:a.building}), el('td',{class:'tbl-td', text:`${a.friendshipPct}%`}),
+            el('td',{class:'tbl-td', text:`${a.happinessPct}%`}),
+        ]));
+    });
+
+    const friendsBody = document.getElementById('friends-table-body');
+    d.friendships.slice(0,10).forEach(f => {
+        friendsBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:f.name}), el('td',{class:'tbl-td', text:String(f.hearts)}),
+            el('td',{class:'tbl-td'}, [el('span',{class:'status-badge badge-green', text:f.status})]),
+            el('td',{class:'tbl-td text-slate-400', text:f.lastGift||'—'}),
+        ]));
+    });
+
+    // ===== PRODUCTION =====
+    const shippedBody = document.getElementById('shipped-table-body');
+    d.shipped.slice(0,10).forEach(s => {
+        shippedBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:s.name + (s.isGenericId?' *':'')}), el('td',{class:'tbl-td', text:String(s.qty)}),
+        ]));
+    });
+
+    const monstersBody = document.getElementById('monsters-table-body');
+    Object.entries(d.monstersKilled).slice(0,10).forEach(([name,qty]) => {
+        monstersBody.appendChild(el('tr',{class:'tbl-row'},[el('td',{class:'tbl-td font-bold', text:name}), el('td',{class:'tbl-td', text:String(qty)})]));
+    });
+
+    const machinesBody = document.getElementById('machines-table-body');
+    Object.entries(d.machines.counts).sort((a,b)=>b[1]-a[1]).forEach(([name,count]) => {
+        const active = d.machines.active[name]||0;
+        machinesBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:name}), el('td',{class:'tbl-td', text:String(count)}),
+            el('td',{class:'tbl-td', text:String(active)}),
+        ]));
+    });
+
+    // ===== ACHIEVEMENTS =====
+    const achvGrid = document.getElementById('achv-grid');
+    d.achievements.forEach(id => {
+        achvGrid.appendChild(el('span',{class:'status-badge badge-green', text:`#${id}`}));
+    });
+
+    // ===== EXPLORATION =====
+    const ex = d.exploration;
+    const free = ex.notVisited.filter(r => !r.locked);
+    const locked = ex.notVisited.filter(r => r.locked);
+    const kpiExploration = document.getElementById('kpi-exploration-row');
+    [
+        ['Locais visitados', `${ex.totalVisited}/${ex.totalExisting}`, ''],
+        ['Livres pra visitar', String(free.length), ''],
+        ['Ainda trancados', String(locked.length), ''],
+    ].forEach(([label,value,sub]) => kpiExploration.appendChild(kpiCard(label,value,sub)));
+
+    const freeBody = document.getElementById('exploration-free-body');
+    free.forEach(r => freeBody.appendChild(el('tr',{class:'tbl-row'},[el('td',{class:'tbl-td font-bold', text:r.name})])));
+
+    const lockedBody = document.getElementById('exploration-locked-body');
+    locked.forEach(r => lockedBody.appendChild(el('tr',{class:'tbl-row'},[
+        el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td text-slate-400', text:r.reason}),
+    ])));
+}
+</script>
+</body>
+</html>
