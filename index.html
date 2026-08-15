@@ -35,8 +35,21 @@ tailwind.config = {
         h1, h2, h3, h4 { @apply font-display text-slate-800; }
     }
     @layer components {
-        .sidebar { @apply bg-white border-r-4 border-primary fixed h-screen w-64 z-50 flex flex-col overflow-y-auto shadow-xl; }
-        .main-content { @apply ml-64 p-10; }
+        .sidebar {
+            @apply bg-white border-r-4 border-primary fixed h-screen w-64 z-50 flex flex-col overflow-y-auto shadow-xl;
+            transform: translateX(-100%);
+        }
+        @media (min-width: 768px) {
+            .sidebar { transform: translateX(0) !important; }
+        }
+        .main-content { @apply p-4 md:ml-64 md:p-10; }
+        .mobile-topbar { @apply flex md:hidden items-center justify-between bg-white border-b border-slate-200 px-4 py-3 sticky top-0 z-40; }
+        .sidebar-backdrop {
+            @apply fixed inset-0 bg-slate-900/40 z-40;
+            display: none;
+        }
+        .sidebar-backdrop.active { display: block; }
+        @media (min-width: 768px) { .sidebar-backdrop { display: none !important; } }
         .nav-label { @apply text-[9px] font-black text-slate-300 uppercase tracking-widest mt-6 mb-2 ml-6 block; }
         .nav-link { @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-500 transition-all mx-3 my-0.5 cursor-pointer; }
         .nav-link:hover { @apply bg-slate-50 text-primary; }
@@ -60,8 +73,20 @@ tailwind.config = {
 </head>
 <body class="bg-nfbBg">
 
+<!-- ===== MOBILE TOPBAR ===== -->
+<div class="mobile-topbar">
+    <div class="flex items-center gap-2">
+        <img src="stardew_logo.png" alt="Stardew Valley" class="h-7 w-auto object-contain">
+        <span class="text-sm font-black text-slate-800" id="mobile-title">Fazenda</span>
+    </div>
+    <button onclick="toggleSidebar(true)" class="p-2 -mr-2" aria-label="Abrir menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+</div>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
 <!-- ===== SIDEBAR ===== -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
     <div class="p-6 flex-1">
         <div class="mb-8">
             <img src="stardew_logo.png" alt="Stardew Valley" class="h-11 w-auto object-contain mb-4">
@@ -368,6 +393,24 @@ function switchView(viewId) {
     document.getElementById('nav-' + viewId)?.classList.add('active');
     document.getElementById('view-title').innerText = VIEW_TITLES[viewId] || viewId;
     document.getElementById('view-subtitle').innerText = VIEW_SUBTITLES[viewId] || '';
+    toggleSidebar(false);
+}
+
+function toggleSidebar(open) {
+    const sb = document.getElementById('sidebar');
+    if (sb) {
+        // No desktop a media query (!important) já mantém a sidebar visível —
+        // não competimos com ela via inline style, só limpamos qualquer valor
+        // deixado do modo mobile. No mobile, controlamos via inline style.
+        if (window.matchMedia('(min-width: 768px)').matches) {
+            sb.style.transition = '';
+            sb.style.transform = '';
+        } else {
+            sb.style.transition = 'transform 0.25s ease';
+            sb.style.transform = open ? 'translateX(0)' : 'translateX(-100%)';
+        }
+    }
+    document.getElementById('sidebar-backdrop')?.classList.toggle('active', open);
 }
 
 function el(tag, attrs={}, children=[]) {
@@ -387,6 +430,9 @@ fetch('data.json').then(r => r.json()).then(render).catch(err => {
     document.querySelector('main').innerHTML = '<p class="p-10">Erro ao carregar data.json — rode <code>python parse_save.py</code> e sirva esta pasta com um servidor HTTP local.<br>' + err + '</p>';
 });
 
+toggleSidebar(false);
+window.addEventListener('resize', () => toggleSidebar(false));
+
 function kpiCard(label, value, sub, borderClass) {
     return el('div', {class: `card-nfb kpi-card ${borderClass||''}`}, [
         el('p', {class:'text-xs font-black text-slate-400 uppercase tracking-widest mb-3', text:label}),
@@ -397,6 +443,7 @@ function kpiCard(label, value, sub, borderClass) {
 
 function render(d) {
     document.getElementById('sidebar-farm-name').textContent = `Fazenda ${d.overview.farmName}`;
+    document.getElementById('mobile-title').textContent = `Fazenda ${d.overview.farmName}`;
     document.getElementById('sidebar-date').textContent = `${d.overview.season} ${d.overview.day} · Ano ${d.overview.year}`;
     document.getElementById('sidebar-player-name').textContent = d.overview.playerName;
     document.getElementById('sidebar-avatar').textContent = (d.overview.playerName||'?').slice(0,2).toUpperCase();
