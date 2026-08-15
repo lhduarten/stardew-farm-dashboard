@@ -48,6 +48,7 @@ tailwind.config = {
         .badge-red { @apply bg-red-100 text-red-700; }
         .badge-orange { @apply bg-orange-100 text-orange-700; }
         .badge-gray { @apply bg-slate-100 text-slate-500; }
+        .badge-blue { @apply bg-blue-100 text-blue-700; }
         .view-hidden { display: none !important; }
         .tbl-th { @apply text-left py-3 px-4 text-xs font-black text-slate-400 uppercase tracking-widest; }
         .tbl-td { @apply py-3 px-4 text-sm text-slate-700; }
@@ -202,7 +203,7 @@ tailwind.config = {
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="border-b border-slate-100"><tr>
-                            <th class="tbl-th">Item</th><th class="tbl-th">Qtd</th><th class="tbl-th">Valor crua</th><th class="tbl-th">Se processado</th>
+                            <th class="tbl-th">Item</th><th class="tbl-th">Qtd</th><th class="tbl-th">Valor crua</th><th class="tbl-th">Se processado</th><th class="tbl-th">Rota</th>
                         </tr></thead>
                         <tbody id="raw-table-body"></tbody>
                     </table>
@@ -514,9 +515,11 @@ function render(d) {
 
     const rawBody = document.getElementById('raw-table-body');
     d.finance.topRawItems.forEach(r => {
+        const isKeg = (r.method||'').startsWith('Keg');
         rawBody.appendChild(el('tr',{class:'tbl-row'},[
             el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:fmt(r.stack)}),
             el('td',{class:'tbl-td', text:fmtG(r.value)}), el('td',{class:'tbl-td text-primary font-bold', text:fmtG(r.potential)}),
+            el('td',{class:'tbl-td'}, [el('span',{class:`status-badge ${isKeg?'badge-orange':'badge-blue'}`, text:r.method||'—'})]),
         ]));
     });
 
