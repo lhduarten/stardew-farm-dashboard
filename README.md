@@ -4,7 +4,7 @@ Pipeline de ETL que lê o save do Stardew Valley (XML) e gera um dashboard
 operacional local, com métricas reais de fazenda, finanças, plantações e
 exploração — sem inventar dados que o save não sustenta.
 
-**[Ver o dashboard ao vivo →](https://SEU_USUARIO.github.io/NOME_DO_REPO/)**
+**[Ver o dashboard ao vivo →](https://lhduarten.github.io/stardew-farm-dashboard/)**
 
 ## Pipeline
 
