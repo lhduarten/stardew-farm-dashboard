@@ -220,6 +220,18 @@ tailwind.config = {
                 </div>
             </div>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div class="card-nfb p-0 overflow-hidden">
+                <div class="p-6 pb-0"><h3 class="text-base font-black text-slate-800 mb-4">Artesanato já pronto (top 10)</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="border-b border-slate-100"><tr><th class="tbl-th">Item</th><th class="tbl-th">Valor</th></tr></thead>
+                        <tbody id="artisan-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ========== VIEW: CROPS ========== -->
@@ -458,7 +470,12 @@ function render(d) {
     const kpiMetas = document.getElementById('kpi-metas-grid');
     Object.values(d.kpis).forEach(k => {
         if (k.target === null) { kpiMetas.appendChild(kpiCard(k.label, `${fmt(k.actual)}${k.unit}`, 'sem meta')); return; }
-        const pct = k.inverse ? Math.max(0,100-(k.actual/(k.target||1)*100)) : Math.min(100,(k.actual/(k.target||1)*100));
+        // Para métricas invertidas (menor é melhor) com meta=0 (ex: % morto, % em risco),
+        // "quanto falta" é medido direto sobre o próprio valor (0-100), não como razão
+        // contra a meta — dividir por meta=0 não faz sentido e travava a barra em 0%.
+        const pct = k.inverse
+            ? (k.target === 0 ? Math.max(0, 100 - k.actual) : Math.max(0, 100 - ((k.actual - k.target) / k.target * 100)))
+            : Math.min(100, (k.actual / (k.target || 1) * 100));
         const atGoal = k.inverse ? k.actual <= k.target : k.actual >= k.target;
         const barColor = atGoal ? CHART_COLORS.good : (pct>=70?CHART_COLORS.warn:CHART_COLORS.crit);
         const card = el('div',{class:'card-nfb kpi-card'},[
@@ -508,6 +525,13 @@ function render(d) {
         roiBody.appendChild(el('tr',{class:'tbl-row'},[
             el('td',{class:'tbl-td font-bold', text:r.name}), el('td',{class:'tbl-td', text:String(r.tiles)}),
             el('td',{class:'tbl-td', text:String(r.daysToHarvest)}), el('td',{class:'tbl-td text-primary font-bold', text:fmtG(r.roiPerDay)}),
+        ]));
+    });
+
+    const artisanBody = document.getElementById('artisan-table-body');
+    d.finance.topArtisanItems.forEach(a => {
+        artisanBody.appendChild(el('tr',{class:'tbl-row'},[
+            el('td',{class:'tbl-td font-bold', text:a.name}), el('td',{class:'tbl-td', text:fmtG(a.value)}),
         ]));
     });
 

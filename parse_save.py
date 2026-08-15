@@ -441,15 +441,29 @@ def get_farm_location(root):
     return None
 
 
+def get_location(root, name):
+    locs = root.find("locations")
+    for gl in locs.findall("GameLocation"):
+        if txt(gl, "name") == name:
+            return gl
+    return None
+
+
 SEASON_LENGTH_DAYS = 28  # fato fixo do jogo: toda estação tem 28 dias
 REGROW_SENTINEL = 90000  # fase final >= isso = "aguardando regrow", plantação já perene
 
 
-def parse_crops(farm, name_map, price_map, current_day):
+def parse_crops(farm, greenhouse, name_map, price_map, current_day):
     """Retorna estatísticas de plantações + risco de morte por virada de estação
     (fato de jogo: plantação não colhida na virada da estação morre) + ROI por tile
-    (g de venda / dias até a 1a colheita, direto dos campos phaseDays do save)."""
-    tf = farm.find("terrainFeatures")
+    (g de venda / dias até a 1a colheita, direto dos campos phaseDays do save).
+    A Estufa é uma localização separada da Farm no save — plantações lá dentro não
+    aparecem em farm.find('terrainFeatures'), por isso é escaneada junto aqui.
+    Culturas na Estufa nunca morrem por virada de estação (regra do jogo: cultivo
+    protegido), então ficam de fora do cálculo de risco mesmo se ainda imaturas."""
+    locations_to_scan = [(farm, False)]
+    if greenhouse is not None:
+        locations_to_scan.append((greenhouse, True))
     crops = {}
     total_tiles = 0
     fully_grown = 0
@@ -458,7 +472,10 @@ def parse_crops(farm, name_map, price_map, current_day):
     at_risk = {}  # nome -> {count, value}
     roi_data = {}  # nome -> {totalDays, price, count}
 
-    if tf is not None:
+    for loc, is_greenhouse in locations_to_scan:
+        tf = loc.find("terrainFeatures")
+        if tf is None:
+            continue
         for item in tf.findall("item"):
             hoedirt = item.find(".//TerrainFeature[@{http://www.w3.org/2001/XMLSchema-instance}type='HoeDirt']")
             if hoedirt is None:
@@ -499,8 +516,9 @@ def parse_crops(farm, name_map, price_map, current_day):
                 r = roi_data.setdefault(crop_name, {"totalDays": total_growth_days, "price": harvest_price, "count": 0})
                 r["count"] += 1
 
-            # Risco de fim de estação: plantação ainda não madura, sem dias suficientes p/ terminar
-            if not full and not is_dead:
+            # Risco de fim de estação: plantação ainda não madura, sem dias suficientes p/ terminar.
+            # Não aplica à Estufa — cultivo lá dentro não morre na virada de estação.
+            if not full and not is_dead and not is_greenhouse:
                 remaining_phases = phase_values[current_phase:]
                 remaining_days = sum(p for p in remaining_phases if p < REGROW_SENTINEL) - day_of_phase
                 if remaining_days > days_left_in_season:
@@ -540,13 +558,18 @@ def parse_crops(farm, name_map, price_map, current_day):
 SPRINKLER_COVERAGE = {"Sprinkler": 4, "Quality Sprinkler": 8, "Iridium Sprinkler": 24}
 
 
-def parse_sprinklers(farm):
+def parse_sprinklers(farm, greenhouse):
     """Conta sprinklers e soma a capacidade de cobertura (fato: 4/8/24 tiles por tipo,
     valores fixos do jogo). É um teto de capacidade, não a cobertura real tile-a-tile
-    (sprinklers podem se sobrepor)."""
-    objects = farm.find("objects")
+    (sprinklers podem se sobrepor). Inclui a Estufa — localização separada da Farm
+    no save, mas onde é comum ter sprinkler instalado."""
     counts = {t: 0 for t in SPRINKLER_COVERAGE}
-    if objects is not None:
+    for loc in (farm, greenhouse):
+        if loc is None:
+            continue
+        objects = loc.find("objects")
+        if objects is None:
+            continue
         for item in objects.findall("item"):
             obj = item.find(".//Object")
             if obj is None:
@@ -722,10 +745,11 @@ def main():
     price_map = build_item_price_map(root)
 
     farm = get_farm_location(root)
+    greenhouse = get_location(root, "Greenhouse")
     overview = parse_overview(player)
     stats_values, monsters = parse_stats(player)
-    crops = parse_crops(farm, name_map, price_map, overview["day"]) if farm is not None else {}
-    sprinklers = parse_sprinklers(farm) if farm is not None else {}
+    crops = parse_crops(farm, greenhouse, name_map, price_map, overview["day"]) if farm is not None else {}
+    sprinklers = parse_sprinklers(farm, greenhouse) if farm is not None else {}
     animals, building_counts = parse_animals(farm) if farm is not None else ([], {})
     machine_counts, machine_active = parse_production_objects(root)
     friendships = parse_friendships(player)
